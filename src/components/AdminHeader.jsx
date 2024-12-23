@@ -5,7 +5,7 @@ import Logout from "./Logout";
 
 const AdminHeader = ({ onMenuClick }) => {
     return (
-        <header className="bg-gradient-to-r from-blue-700 to-blue-500 text-white p-4 gap-2 flex items-center justify-between">
+        <header className="bg-gradient-to-r from-red-700 to-blue-500 text-white p-4 gap-2 flex items-center justify-between">
             {/* Hamburger Menu for Small Screens */}
             <button className="md:hidden flex items-center gap-2" onClick={onMenuClick}>
                 <FontAwesomeIcon icon={faBars} size="lg" />
