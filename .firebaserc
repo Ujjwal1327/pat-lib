@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "patna-library",
+    "nn": "patna-library"
+  },
+  "targets": {},
+  "etags": {}
+}
