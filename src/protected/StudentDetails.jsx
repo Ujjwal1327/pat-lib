@@ -148,6 +148,7 @@ function StudentDetails() {
                   <th className="px-4 whitespace-nowrap py-2 text-left">S. No.</th>
                   <th className="px-4 whitespace-nowrap py-2 text-left">Shift Name</th>
                   <th className="px-4 whitespace-nowrap py-2 text-left">Amount Paid</th>
+                  <th className="px-4 whitespace-nowrap py-2 text-left">Dues</th>
                   <th className="px-4 whitespace-nowrap py-2 text-left">Payment Date</th>
                   <th className="px-4 whitespace-nowrap py-2 text-left">Expire On</th>
                 </tr>
@@ -165,6 +166,7 @@ function StudentDetails() {
                       <td className="px-4 whitespace-nowrap py-2">{index + 1}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.shifts.join(" , ")}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.payment.amount}</td>
+                      <td className="px-4 whitespace-nowrap py-2">{each.payment.dues? each.payment.dues :0 }</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.payment.dateOfPayment}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.payment.eligibleTill}</td>
                     </tr>

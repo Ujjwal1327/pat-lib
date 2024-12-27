@@ -107,10 +107,6 @@ const Left = () => {
             console.error("Error updating student data:", error);
         }
     };
-
-
-
-
     const handleShiftChange = (e) => {
         const { value, checked } = e.target;
         setRenewData((prevData) => {

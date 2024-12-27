@@ -1,53 +1,62 @@
 {
-    "id": "YyVXJDs1n6roYgNXNs0K",
-    "address": "bullilbullilbullilbullilbullil",
-    "studentId": "STU1735270870786",
-    "fatherName": "bullil",
+    "id": "56DfyZ0gZbvt1lf4DiSZ",
+    "fatherName": "rohit",
+    "runningShiftStatus": [
+        {
+            "shiftName": "morning",
+            "eligibleTill": "2025-01-08"
+        },
+        {
+            "eligibleTill": "2025-01-08",
+            "shiftName": "Evening"
+        }
+    ],
+    "name": "rohit",
+    "seatNo": "15",
+    "dateOfJoining": "2024-12-27",
+    "studentId": "STU1735308812180",
+    "mobile": "rohit",
+    "payment": {
+        "mode": "Cash",
+        "amount": "200",
+        "seat": "15",
+        "dateOfPayment": "2024-12-18",
+        "eligibleTill": "2025-01-08"
+    },
+    "documents": {
+        "photo": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/photos%2Fyoutube%20bannner.jpg-1735308801873?alt=media&token=a8f8b3cf-144d-4910-8d6e-c5a17e4a884b",
+        "aadhaar": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/aadhaars%2Fyoutube%20bannner.jpg-1735308808767?alt=media&token=38b5bf82-a770-4c55-a617-92738da17cea"
+    },
+    "shifts": [
+        "morning",
+        "Evening"
+    ],
     "history": [
         {
             "payment": {
-                "eligibleTill": "2024-12-01",
-                "amount": "11",
-                "dateOfPayment": "2024-11-01"
+                "amount": "0820",
+                "dateOfPayment": "2024-12-27",
+                "eligibleTill": "2025-01-27"
             },
             "shifts": [
-                "Full",
-                "Evening"
+                "morning",
+                "Lunch",
+                "Night"
             ]
         },
         {
+            "shifts": [
+                "morning",
+                "Evening"
+            ],
             "payment": {
-                "mode": "Cheque",
-                "seat": "111211",
-                "dateOfPayment": "2024-12-20",
-                "eligibleTill": "2025-01-28",
-                "amount": "11"
-            },
-            "shifts": ["Lunch"]
+                "eligibleTill": "2025-01-08",
+                "mode": "Cash",
+                "seat": "15",
+                "amount": "200",
+                "dateOfPayment": "2024-12-18"
+            }
         }
     ],
-    "payment": {
-        "dateOfPayment": "2024-12-20",
-        "seat": "111211",
-        "mode": "Cheque",
-        "eligibleTill": "2025-01-28",
-        "amount": "11"
-    },
-    "seatNo": "111211",
-    "shifts": [
-        "Lunch"
-    ],
-    "name": "bulli",
-    "runningShiftStatus": [
-        {
-            "shiftName": "Lunch",
-            "eligibleTill": "2025-01-28"
-        }
-    ],
-    "dateOfJoining": "2024-11-01",
-    "mobile": "12321312323",
-    "documents": {
-        "photo": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/photos%2Fqr-code.png-1735270866937?alt=media&token=83eb2749-3411-4a4f-b79e-3c49cfc8e3d6",
-        "aadhaar": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/aadhaars%2Fqr-code.png-1735270869068?alt=media&token=762a81f1-b723-4100-b6b1-395ad2aeaad2"
-    }
+    "address": "rohit"
 }

@@ -24,6 +24,7 @@ const PendingStudents = () => {
         eligibleTill: "",
         mode: "",
         amount: "",
+        dues: "",
         seat: "",
     });
     const handleRenew = (studentId) => {
@@ -43,6 +44,7 @@ const PendingStudents = () => {
             mode: renewData.mode,
             amount: renewData.amount,
             seat: renewData.seat, // Include the seat number in the payment data
+            dues: renewData.dues, // Include the seat number in the payment data
         };
 
         console.log("Updated Payment:", updatedPayment);
@@ -95,6 +97,7 @@ const PendingStudents = () => {
                     dateOfPayment: updatedPayment.dateOfPayment,
                     eligibleTill: updatedPayment.eligibleTill,
                     mode: updatedPayment.mode,
+                    dues: updatedPayment.dues,
                     amount: updatedPayment.amount,
                     seat: updatedPayment.seat, // Add `seat` to the payment object
                 },
@@ -233,7 +236,7 @@ const PendingStudents = () => {
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
-                                            .map((item) =>  item.eligibleTill )}
+                                            .map((item) => item.eligibleTill)}
 
                                     </td>
                                     <td className="px-4 py-2">
@@ -246,7 +249,7 @@ const PendingStudents = () => {
                                         {/* Modal popUp */}
                                         {isModalOpen && (
                                             <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50">
-                                                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                                                <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-h-screen overflow-y-auto">
                                                     <h2 className="text-xl font-semibold">
                                                         Renew Payment
                                                     </h2>
@@ -369,6 +372,29 @@ const PendingStudents = () => {
                                                                 required
                                                             />
                                                         </div>
+
+                                                        {/* New Input Field for Dues */}
+                                                        <div className="mb-4">
+                                                            <label
+                                                                htmlFor="dues"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Dues
+                                                            </label>
+                                                            <input
+                                                                type="number"
+                                                                id="dues"
+                                                                value={renewData.dues || ''}
+                                                                onChange={(e) =>
+                                                                    setRenewData({
+                                                                        ...renewData,
+                                                                        dues: e.target.value,
+                                                                    })
+                                                                }
+                                                                className="mt-1 p-2 border rounded-md w-full"
+                                                            />
+                                                        </div>
+
                                                         <div className="mb-4">
                                                             <label
                                                                 htmlFor="seat"
@@ -408,6 +434,7 @@ const PendingStudents = () => {
                                                 </div>
                                             </div>
                                         )}
+
                                     </td>
                                 </tr>
                             ))

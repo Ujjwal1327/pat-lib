@@ -21,6 +21,8 @@ import StudentDetails from './protected/StudentDetails.jsx';
 import ActiveStudents from './protected/ActiveStudents.jsx';
 import Left from './protected/Left.jsx';
 import PendingStudents from './protected/PendingStudents.jsx';
+import Income from './protected/Income.jsx';
+import DuesStudent from './protected/DuesStudent.jsx';
 export const routes = [
     {
         path: "/", // Public layout for home and static pages
@@ -50,20 +52,21 @@ export const routes = [
         errorElement: <NotFound />,
         children: [
             { path: "", element: <AdminDashboard /> }, // Relative path
-            { path: "expenses/overview", element:   <ExpenseList/> }, // Relative path
-            { path: "expenses/add", element: <AddExpense/> }, // Relative path
-            { path: "income/overview", element: <MainPage data="this is expense overview" /> }, // Relative path
-            { path: "students/active", element: <ActiveStudents/> }, // Relative path
+            { path: "expenses/overview", element: <ExpenseList /> }, // Relative path
+            { path: "expenses/add", element: <AddExpense /> }, // Relative path
+            { path: "income/overview", element: <Income /> }, // Relative path
+            { path: "students/dues", element: <DuesStudent /> }, // Relative path
+            { path: "students/active", element: <ActiveStudents /> }, // Relative path
             { path: "students/active/:id", element: <StudentDetails /> },
-            { path: "students/pending", element: <PendingStudents/> }, // Relative path
-            { path: "students/left", element: <Left/>}, // Relative path
-            { path: "students/all", element: <StudentList/> }, // Relative path
+            { path: "students/pending", element: <PendingStudents /> }, // Relative path
+            { path: "students/left", element: <Left /> }, // Relative path
+            { path: "students/all", element: <StudentList /> }, // Relative path
             { path: "students/all/:id", element: <StudentDetails /> }, // Relative path
             { path: "students/add", element: <AddStudent /> }, // Relative path
-            { path: "seat", element: <Seat/> }, // Relative path
-            { path: "shift", element: <ManageShifts/> }, // Relative path
-            { path: "enquiries", element: <Enquiries/> }, // Relative path
-            
+            { path: "seat", element: <Seat /> }, // Relative path
+            { path: "shift", element: <ManageShifts /> }, // Relative path
+            { path: "enquiries", element: <Enquiries /> }, // Relative path
+
 
         ],
     },

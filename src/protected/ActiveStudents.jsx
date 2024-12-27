@@ -25,6 +25,7 @@ const ActiveStudents = () => {
         eligibleTill: "",
         mode: "",
         amount: "",
+        dues: "",
         seat: "",
     });
 
@@ -47,6 +48,7 @@ const ActiveStudents = () => {
             eligibleTill: renewData.eligibleTill,
             mode: renewData.mode,
             amount: renewData.amount,
+            dues: renewData.dues,
             seat: renewData.seat, // Include the seat number in the payment data
         };
 
@@ -101,6 +103,7 @@ const ActiveStudents = () => {
                     eligibleTill: updatedPayment.eligibleTill,
                     mode: updatedPayment.mode,
                     amount: updatedPayment.amount,
+                    dues: updatedPayment.dues,
                     seat: updatedPayment.seat, // Add `seat` to the payment object
                 },
                 // Append a new entry to the history array
@@ -142,7 +145,7 @@ const ActiveStudents = () => {
 
 
 
- // Fetch shifts from Firestore on component mount
+    // Fetch shifts from Firestore on component mount
     useEffect(() => {
         const fetchShifts = async () => {
             try {
@@ -243,170 +246,194 @@ const ActiveStudents = () => {
                                             Upgrade
                                         </button>
                                         {/* Modal popUp */}
-                                        {isModalOpen && (
-                                            <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50">
-                                                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                                                    <h2 className="text-xl font-semibold">
-                                                        Renew Payment
-                                                    </h2>
-                                                    <form onSubmit={handleRenewSubmit}>
-                                                        <div className="mb-4">
-                                                            <label
-                                                                htmlFor="shift"
-                                                                className="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Shift
-                                                            </label>
-                                                            <div className="flex gap-2">
-                                                                {shifts &&
-                                                                    shifts.map((shift) => (
-                                                                        <div key={shift.name}>
-                                                                            <input
-                                                                                type="checkbox"
-                                                                                value={shift.name}
-                                                                                checked={renewData.shift.includes(
-                                                                                    shift.name
-                                                                                )}
-                                                                                onChange={handleShiftChange}
-                                                                            />
-                                                                            <label>{shift.name}</label>
-                                                                        </div>
-                                                                    ))}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="mb-4">
-                                                            <label
-                                                                htmlFor="dateOfPayment"
-                                                                className="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Date of Payment
-                                                            </label>
-                                                            <input
-                                                                type="date"
-                                                                id="dateOfPayment"
-                                                                value={renewData.dateOfPayment}
-                                                                onChange={(e) =>
-                                                                    setRenewData({
-                                                                        ...renewData,
-                                                                        dateOfPayment: e.target.value,
-                                                                    })
-                                                                }
-                                                                className="mt-1 p-2 border rounded-md w-full"
-                                                                required
-                                                            />
-                                                        </div>
-
-                                                        <div className="mb-4">
-                                                            <label
-                                                                htmlFor="eligibleTill"
-                                                                className="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Eligible Till
-                                                            </label>
-                                                            <input
-                                                                type="date"
-                                                                id="eligibleTill"
-                                                                value={renewData.eligibleTill}
-                                                                onChange={(e) =>
-                                                                    setRenewData({
-                                                                        ...renewData,
-                                                                        eligibleTill: e.target.value,
-                                                                    })
-                                                                }
-                                                                className="mt-1 p-2 border rounded-md w-full"
-                                                                required
-                                                            />
-                                                        </div>
-
-                                                        <div className="mb-4">
-                                                            <label
-                                                                htmlFor="mode"
-                                                                className="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Mode
-                                                            </label>
-                                                            <select
-                                                                id="mode"
-                                                                value={renewData.mode}
-                                                                onChange={(e) =>
-                                                                    setRenewData({
-                                                                        ...renewData,
-                                                                        mode: e.target.value,
-                                                                    })
-                                                                }
-                                                                className="mt-1 p-2 border rounded-md w-full"
-                                                                required
-                                                            >
-                                                                <option value="" disabled>
-                                                                    Select Mode
-                                                                </option>
-                                                                <option value="Online">Online</option>
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="Cheque">Cheque</option>
-                                                            </select>
-                                                        </div>
-
-                                                        <div className="mb-4">
-                                                            <label
-                                                                htmlFor="amount"
-                                                                className="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Amount
-                                                            </label>
-                                                            <input
-                                                                type="number"
-                                                                id="amount"
-                                                                value={renewData.amount}
-                                                                onChange={(e) =>
-                                                                    setRenewData({
-                                                                        ...renewData,
-                                                                        amount: e.target.value,
-                                                                    })
-                                                                }
-                                                                className="mt-1 p-2 border rounded-md w-full"
-                                                                required
-                                                            />
-                                                        </div>
-                                                        <div className="mb-4">
-                                                            <label
-                                                                htmlFor="seat"
-                                                                className="block text-sm font-medium text-gray-700"
-                                                            >
-                                                                Seat
-                                                            </label>
-                                                            <input
-                                                                type="text"
-                                                                id="seat"
-                                                                value={renewData.seat}
-                                                                onChange={(e) =>
-                                                                    setRenewData({
-                                                                        ...renewData,
-                                                                        seat: e.target.value,
-                                                                    })
-                                                                }
-                                                                className="mt-1 p-2 border rounded-md w-full"
-                                                                required
-                                                            />
-                                                        </div>
-
-                                                        <button
-                                                            type="submit"
-                                                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
-                                                        >
-                                                            Submit
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setIsModalOpen(false)}
-                                                            className="absolute top-2 right-2 text-xl text-red-500 hover:text-red-700"
-                                                        >
-                                                            <FontAwesomeIcon icon={faTimes} />
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
+{isModalOpen && (
+    <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-h-screen overflow-y-auto">
+            <h2 className="text-xl font-semibold">
+                Renew Payment
+            </h2>
+            <form onSubmit={handleRenewSubmit}>
+                <div className="mb-4">
+                    <label
+                        htmlFor="shift"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Shift
+                    </label>
+                    <div className="flex gap-2">
+                        {shifts &&
+                            shifts.map((shift) => (
+                                <div key={shift.name}>
+                                    <input
+                                        type="checkbox"
+                                        value={shift.name}
+                                        checked={renewData.shift.includes(
+                                            shift.name
                                         )}
+                                        onChange={handleShiftChange}
+                                    />
+                                    <label>{shift.name}</label>
+                                </div>
+                            ))}
+                    </div>
+                </div>
+
+                <div className="mb-4">
+                    <label
+                        htmlFor="dateOfPayment"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Date of Payment
+                    </label>
+                    <input
+                        type="date"
+                        id="dateOfPayment"
+                        value={renewData.dateOfPayment}
+                        onChange={(e) =>
+                            setRenewData({
+                                ...renewData,
+                                dateOfPayment: e.target.value,
+                            })
+                        }
+                        className="mt-1 p-2 border rounded-md w-full"
+                        required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label
+                        htmlFor="eligibleTill"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Eligible Till
+                    </label>
+                    <input
+                        type="date"
+                        id="eligibleTill"
+                        value={renewData.eligibleTill}
+                        onChange={(e) =>
+                            setRenewData({
+                                ...renewData,
+                                eligibleTill: e.target.value,
+                            })
+                        }
+                        className="mt-1 p-2 border rounded-md w-full"
+                        required
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label
+                        htmlFor="mode"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Mode
+                    </label>
+                    <select
+                        id="mode"
+                        value={renewData.mode}
+                        onChange={(e) =>
+                            setRenewData({
+                                ...renewData,
+                                mode: e.target.value,
+                            })
+                        }
+                        className="mt-1 p-2 border rounded-md w-full"
+                        required
+                    >
+                        <option value="" disabled>
+                            Select Mode
+                        </option>
+                        <option value="Online">Online</option>
+                        <option value="Cash">Cash</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
+                </div>
+
+                <div className="mb-4">
+                    <label
+                        htmlFor="amount"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Amount
+                    </label>
+                    <input
+                        type="number"
+                        id="amount"
+                        value={renewData.amount}
+                        onChange={(e) =>
+                            setRenewData({
+                                ...renewData,
+                                amount: e.target.value,
+                            })
+                        }
+                        className="mt-1 p-2 border rounded-md w-full"
+                        required
+                    />
+                </div>
+
+                {/* New Input Field for Dues */}
+                <div className="mb-4">
+                    <label
+                        htmlFor="dues"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Dues
+                    </label>
+                    <input
+                        type="number"
+                        id="dues"
+                        value={renewData.dues || ''}
+                        onChange={(e) =>
+                            setRenewData({
+                                ...renewData,
+                                dues: e.target.value,
+                            })
+                        }
+                        className="mt-1 p-2 border rounded-md w-full"
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label
+                        htmlFor="seat"
+                        className="block text-sm font-medium text-gray-700"
+                    >
+                        Seat
+                    </label>
+                    <input
+                        type="text"
+                        id="seat"
+                        value={renewData.seat}
+                        onChange={(e) =>
+                            setRenewData({
+                                ...renewData,
+                                seat: e.target.value,
+                            })
+                        }
+                        className="mt-1 p-2 border rounded-md w-full"
+                        required
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                >
+                    Submit
+                </button>
+                <button
+                    type="button"
+                    onClick={() => setIsModalOpen(false)}
+                    className="absolute top-2 right-2 text-xl text-red-500 hover:text-red-700"
+                >
+                    <FontAwesomeIcon icon={faTimes} />
+                </button>
+            </form>
+        </div>
+    </div>
+)}
+
                                     </td>
                                     <td className="px-4 py-2">
                                         {/* Add a Link to view student details */}

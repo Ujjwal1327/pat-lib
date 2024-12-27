@@ -10,7 +10,7 @@ const Sidebar = ({ onMenuClick }) => {
   const toggleDropdown = (menu) => setDropdown(dropdown === menu ? "" : menu);
 
   return (
-    <div className="flex flex-col bg-gradient-to-r from-blue-700 to-blue-500 text-white h-full">
+    <div className="flex flex-col bg-gradient-to-r  from-blue-700 to-blue-500 scroll-smooth text-white h-full overflow-y-auto  pb-5">
       {/* Sidebar Links */}
       <ul className="mx-2 mt-2 space-y-2">
         {/* Dashboard */}
@@ -95,6 +95,20 @@ const Sidebar = ({ onMenuClick }) => {
           </button>
           {dropdown === "students" && (
             <ul className="mx-4">
+              {/* Dues Students */}
+              <li className="mb-2">
+                <NavLink
+                  to="students/dues"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "block px-4 py-2 bg-gradient-to-r from-blue-900 to-blue-200 rounded"
+                      : "block px-4 py-2 hover:bg-gradient-to-r from-blue-900 to-blue-200 rounded"
+                  }
+                  onClick={onMenuClick}
+                >
+                  Dues Students
+                </NavLink>
+              </li>
               {/* Active Students */}
               <li className="mb-2">
                 <NavLink
@@ -188,6 +202,9 @@ const Sidebar = ({ onMenuClick }) => {
             Seat Management
           </NavLink>
         </li>
+
+
+
         {/* Shift */}
         <li>
           <NavLink
@@ -215,6 +232,11 @@ const Sidebar = ({ onMenuClick }) => {
           >
             Inquiries
           </NavLink>
+        </li>
+
+        {/* Empty */}
+        <li className="min-h-28">
+          
         </li>
 
 

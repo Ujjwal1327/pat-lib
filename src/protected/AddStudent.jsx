@@ -16,6 +16,7 @@ const AddStudent = () => {
     shifts: [], // Array to store selected shifts
     payment: {
       amount: "",
+      dues: "", // Initialize dues with 0
       mode: "",
       dateOfPayment: "",
       eligibleTill: "",
@@ -23,6 +24,7 @@ const AddStudent = () => {
     dateOfJoining: "",
     history: [], // Empty initially, will store shift and payment history
   });
+
 
   const [files, setFiles] = useState({
     photo: null,
@@ -96,6 +98,7 @@ const AddStudent = () => {
               amount: studentData.payment.amount,
               dateOfPayment: studentData.payment.dateOfPayment,
               eligibleTill: studentData.payment.eligibleTill,
+              dues: studentData.payment.dues,
             },
           },
         ],
@@ -236,6 +239,15 @@ const AddStudent = () => {
           onChange={handleInputChange}
           className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+        <input
+          type="number"
+          name="payment.dues"
+          placeholder="Dues"
+          value={studentData.payment.dues}
+          onChange={handleInputChange}
+          className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+
         <div>
           <p className="text-gray-700 mb-1">Date of payment:</p>
           <input

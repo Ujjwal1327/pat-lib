@@ -29,12 +29,10 @@ function StudentList() {
     fetchEnq();
   }, []);
 console.log(student)
-  return (
+  return (  
     <div className="p-6 bg-gray-100 min-h-full">
       <PageTitle title="All Students" />
       <h1 className="text-2xl font-bold text-gray-700 mb-4">All Students</h1>
-
-
       <div className="overflow-x-auto">
         <table className="w-full table-auto border-collapse bg-white shadow-md rounded-lg">
           <thead>
