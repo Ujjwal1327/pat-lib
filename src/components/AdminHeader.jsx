@@ -5,7 +5,7 @@ import Logout from "./Logout";
 
 const AdminHeader = ({ onMenuClick }) => {
     return (
-        <header className="bg-gradient-to-r from-red-700 to-blue-500 text-white p-4 gap-2 flex items-center justify-between">
+        <header className="bg-gradient-to-r from-blue-700 to-blue-500 text-white p-4 gap-2 flex items-center justify-between">
             {/* Hamburger Menu for Small Screens */}
             <button className="md:hidden flex items-center gap-2" onClick={onMenuClick}>
                 <FontAwesomeIcon icon={faBars} size="lg" />
@@ -15,7 +15,7 @@ const AdminHeader = ({ onMenuClick }) => {
             <h1 className="text-lg font-bold hidden md:block">Admin Panel</h1>
 
             {/* Search Bar */}
-            <div className="flex items-center bg-white rounded-full px-3 p-1 max-w-lg  flex-grow md:flex-grow-0 border border-gray-300">
+            <div className="flex items-center bg-white rounded-full px-3 p-1 min-w-[50%]  flex-grow md:flex-grow-0 border border-gray-300">
                 <input
                     type="text"
                     className="w-full border-none outline-none text-gray-700 placeholder-gray-500"

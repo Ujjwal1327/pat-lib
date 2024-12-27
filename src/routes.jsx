@@ -17,6 +17,10 @@ import AddStudent from './protected/AddStudent.jsx';
 import ManageShifts from './protected/ManageShifts.jsx';
 import AddExpense from './protected/AddExpense.jsx';
 import ExpenseList from './protected/ExpenseList.jsx';
+import StudentDetails from './protected/StudentDetails.jsx';
+import ActiveStudents from './protected/ActiveStudents.jsx';
+import Left from './protected/Left.jsx';
+import PendingStudents from './protected/PendingStudents.jsx';
 export const routes = [
     {
         path: "/", // Public layout for home and static pages
@@ -49,10 +53,11 @@ export const routes = [
             { path: "expenses/overview", element:   <ExpenseList/> }, // Relative path
             { path: "expenses/add", element: <AddExpense/> }, // Relative path
             { path: "income/overview", element: <MainPage data="this is expense overview" /> }, // Relative path
-            { path: "students/active", element: <MainPage data="this is students active" /> }, // Relative path
-            { path: "students/pending", element: <MainPage data="this is students pending" /> }, // Relative path
-            { path: "students/left", element: <MainPage data="this is students left" /> }, // Relative path
-            { path: "students/all", element: <MainPage data="this is students all" /> }, // Relative path
+            { path: "students/active", element: <ActiveStudents/> }, // Relative path
+            { path: "students/pending", element: <PendingStudents/> }, // Relative path
+            { path: "students/left", element: <Left/>}, // Relative path
+            { path: "students/all", element: <StudentList/> }, // Relative path
+            { path: "students/all/:id", element: <StudentDetails /> }, // Relative path
             { path: "students/add", element: <AddStudent /> }, // Relative path
             { path: "seat", element: <Seat/> }, // Relative path
             { path: "shift", element: <ManageShifts/> }, // Relative path

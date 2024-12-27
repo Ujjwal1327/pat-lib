@@ -5,8 +5,8 @@ import { db } from "../Firebase";
 
 const Enquiries = () => {
   const [enq, setEnq] = useState([]);
-  const [filteredEnq, setFilteredEnq] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [filteredEnq, setFilteredEnq] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState(""); // Month filter state
 
   useEffect(() => {
