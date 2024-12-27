@@ -54,6 +54,7 @@ export const routes = [
             { path: "expenses/add", element: <AddExpense/> }, // Relative path
             { path: "income/overview", element: <MainPage data="this is expense overview" /> }, // Relative path
             { path: "students/active", element: <ActiveStudents/> }, // Relative path
+            { path: "students/active/:id", element: <StudentDetails /> },
             { path: "students/pending", element: <PendingStudents/> }, // Relative path
             { path: "students/left", element: <Left/>}, // Relative path
             { path: "students/all", element: <StudentList/> }, // Relative path

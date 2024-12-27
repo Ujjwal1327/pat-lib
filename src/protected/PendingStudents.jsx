@@ -14,9 +14,9 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons"; // for cross icon
 
 const PendingStudents = () => {
     const [student, setStudent] = useState([]); // Holds student data
+    const [loading, setLoading] = useState(false); // Loading state
     const [shifts, setShifts] = useState([]);
     const [id, setId] = useState("");
-    const [loading, setLoading] = useState(false); // Loading state
     const [isModalOpen, setIsModalOpen] = useState(false); // To control modal visibility
     const [renewData, setRenewData] = useState({
         shift: [],
@@ -226,14 +226,14 @@ const PendingStudents = () => {
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
-                                            .map((item) => <span> " | " + {item.shiftName} + " | "</span> )}
+                                            .map((item) => <span> {item.shiftName} </span>)}
                                     </td>
                                     <td className="px-4 py-2 text-red-500 font-semibold">
                                         {each.runningShiftStatus
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
-                                            .map((item) => " | " + item.eligibleTill + " | ")}
+                                            .map((item) =>  item.eligibleTill )}
 
                                     </td>
                                     <td className="px-4 py-2">
