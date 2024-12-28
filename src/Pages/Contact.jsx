@@ -13,11 +13,7 @@ export default function Contact() {
     const [add, setAdd] = useState('')
     const [alert, setAlert] = useState(null);
     const [loading, setLoading] = useState(false);
-
     const visitorsCollectionRef = collection(db, 'visitors');
-
-
-
     const handleAddVisitor = async (e) => {
         e.preventDefault();
         if (name && num && add) {
@@ -27,7 +23,6 @@ export default function Contact() {
                 const currentDate = new Date();
                 const formattedDate = format(currentDate, "MM/dd/yyyy"); // Date format (MM/dd/yyyy)
                 const formattedTime = format(currentDate, "hh:mm a"); // 12-hour format (hh:mm AM/PM)
-
                 const newVisitor = {
                     name: name,
                     number: num,

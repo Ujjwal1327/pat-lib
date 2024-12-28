@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/PageTitle";
 import {
-    collection, getDocs, getDoc,doc,
+    collection, getDocs, getDoc, doc,
     updateDoc,
 } from "firebase/firestore";
 import { db } from "../Firebase";
@@ -16,6 +16,7 @@ const Left = () => {
     const [shifts, setShifts] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [id, setId] = useState("");
+    const [alert, setAlert] = useState(null);
     const [renewData, setRenewData] = useState({
         shift: [],
         dateOfPayment: "",
@@ -23,90 +24,114 @@ const Left = () => {
         mode: "",
         amount: "",
         seat: "",
+        dues: "",
     });
 
-    const handleRenew = (studentId) => {
+    const handleRenew = (studentId, dues) => {
         setId(studentId)
-        setIsModalOpen(true);
+        if (dues > 0) {
+            setAlert({
+                type: 'error',
+                message: `Please clear the dues amount of  Rs ${dues} first before admiting in new shift. `,
+            });
+        }
+        else {
+
+            setIsModalOpen(true);
+        }
+        setTimeout(() => setAlert(null), 4000);
     }
 
 
     const handleRenewSubmit = async (e) => {
         e.preventDefault();
         const studentId = id; // Assume `id` is the current student ID being updated
-        // Update the payment, including the new `seat` field
+    
+        // Ensure renewData is valid
+        if (!renewData) {
+            console.error("Renew data is undefined or null");
+            return;
+        }
+    
+        // Safely update the payment object
         const updatedPayment = {
-            shift: renewData.shift,
-            dateOfPayment: renewData.dateOfPayment,
-            eligibleTill: renewData.eligibleTill,
-            mode: renewData.mode,
-            amount: renewData.amount,
-            seat: renewData.seat, // Include the seat number in the payment data
+            shift: Array.isArray(renewData.shift) ? renewData.shift : [], // Ensure it's an array
+            dateOfPayment: renewData.dateOfPayment || null,
+            eligibleTill: renewData.eligibleTill || null,
+            mode: renewData.mode || "unknown",
+            amount: renewData.amount || 0,
+            seat: renewData.seat || "unknown",
+            dues: renewData.dues || 0,
         };
-
+    
         console.log("Updated Payment:", updatedPayment);
-
+    
         try {
             // Reference to the specific student document in Firebase
             const studentDocRef = doc(db, "students", studentId);
-
+    
             // Fetch the existing student data
             const studentDoc = await getDoc(studentDocRef);
             if (!studentDoc.exists()) {
                 console.error("Student not found");
                 return;
             }
-
+    
             const studentData = studentDoc.data();
-
-            // Assuming `updatedPayment.shift` contains the list of shifts to renew (e.g., ["Evening"])
-            const updatedRunningShiftStatus = updatedPayment.shift.map((item) => ({
-                shiftName: item,
-                eligibleTill: updatedPayment.eligibleTill,
-            }));
-
-
-
-
-
-            // Update the student data to include the new `seat` field
+            if (!studentData) {
+                console.error("Student data is undefined or null");
+                return;
+            }
+    
+            // Update running shift status
+            const updatedRunningShiftStatus = Array.isArray(updatedPayment.shift)
+                ? updatedPayment.shift.map((item) => ({
+                      shiftName: item,
+                      eligibleTill: updatedPayment.eligibleTill,
+                  }))
+                : [];
+    
+            // Safely update the student data
             const updatedStudentData = {
                 ...studentData,
                 runningShiftStatus: updatedRunningShiftStatus,
                 seatNo: updatedPayment.seat,
-                shifts: updatedPayment.shift, // Overwrite the outer `shifts`
+                shifts: Array.isArray(updatedPayment.shift) ? updatedPayment.shift : [],
                 payment: {
                     dateOfPayment: updatedPayment.dateOfPayment,
                     eligibleTill: updatedPayment.eligibleTill,
                     mode: updatedPayment.mode,
                     amount: updatedPayment.amount,
-                    seat: updatedPayment.seat, // Add `seat` to the payment object
+                    seat: updatedPayment.seat,
+                    dues: updatedPayment.dues,
                 },
-                // Append a new entry to the history array
+                // Safely update the history array
                 history: [
                     ...(Array.isArray(studentData.history) ? studentData.history : []),
                     {
-                        shifts: updatedPayment.shift,
+                        shifts: Array.isArray(updatedPayment.shift) ? updatedPayment.shift : [],
                         payment: {
                             dateOfPayment: updatedPayment.dateOfPayment,
                             amount: updatedPayment.amount,
                             mode: updatedPayment.mode,
                             eligibleTill: updatedPayment.eligibleTill,
-                            seat: updatedPayment.seat, // Track the seat in the history as well
+                            seat: updatedPayment.seat,
                         },
                     },
                 ],
             };
-
+    
             // Update the student document in Firebase
             await updateDoc(studentDocRef, updatedStudentData);
-
+    
             console.log("Student data updated successfully");
             setIsModalOpen(false); // Close the modal after submitting
         } catch (error) {
             console.error("Error updating student data:", error);
         }
     };
+    
+
     const handleShiftChange = (e) => {
         const { value, checked } = e.target;
         setRenewData((prevData) => {
@@ -174,6 +199,22 @@ const Left = () => {
     return (
         <div className="p-6 bg-gray-100 min-h-full">
             <PageTitle title="Left Students" />
+            {/* Custom Alert */}
+            {alert && (
+                <div
+                    className={`fixed top-10 shadow-lg  border-l-4 border-white right-1 m-2 mx-auto text-center w-full sm:w-[40%] py-5 mb-4 text-white ${alert.type === "success" ? "bg-green-500" : "bg-red-500"
+                        }`}
+                >
+                    <p className="text-base">
+                        {alert.message}
+                    </p>
+                    {/* Shrinking Bar */}
+                    <div
+                        className="h-1 bg-white absolute bottom-0 left-0 animate-shrinkBar"
+                    ></div>
+                </div>
+
+            )}
             <h1 className="text-2xl font-bold text-gray-700 mb-4">Left  Students</h1>
             <div className="overflow-x-auto">
                 <table className="w-full table-auto border-collapse bg-white shadow-md rounded-lg">
@@ -206,7 +247,7 @@ const Left = () => {
                                     <td className="px-4 py-2">{each.payment.eligibleTill}</td>
                                     <td className="px-4 py-2">
                                         <button
-                                            onClick={() => handleRenew(each.id)}
+                                            onClick={() => handleRenew(each.id, each.payment.dues)}
                                             className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-700"
                                         >
                                             Renew
@@ -214,7 +255,7 @@ const Left = () => {
                                         {/* Modal popUp */}
                                         {isModalOpen && (
                                             <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50">
-                                                <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                                                <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-h-[95%] sm:max-h-[70vh] overflow-y-auto">
                                                     <h2 className="text-xl font-semibold">
                                                         Renew Payment
                                                     </h2>
@@ -337,6 +378,29 @@ const Left = () => {
                                                                 required
                                                             />
                                                         </div>
+
+                                                        {/* New Input Field for Dues */}
+                                                        <div className="mb-4">
+                                                            <label
+                                                                htmlFor="dues"
+                                                                className="block text-sm font-medium text-gray-700"
+                                                            >
+                                                                Dues
+                                                            </label>
+                                                            <input
+                                                                type="number"
+                                                                id="dues"
+                                                                value={renewData.dues || ''}
+                                                                onChange={(e) =>
+                                                                    setRenewData({
+                                                                        ...renewData,
+                                                                        dues: e.target.value,
+                                                                    })
+                                                                }
+                                                                className="mt-1 p-2 border rounded-md w-full"
+                                                            />
+                                                        </div>
+
                                                         <div className="mb-4">
                                                             <label
                                                                 htmlFor="seat"

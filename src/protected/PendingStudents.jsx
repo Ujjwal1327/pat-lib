@@ -237,7 +237,6 @@ const PendingStudents = () => {
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
                                             .map((item) => item.eligibleTill)}
-
                                     </td>
                                     <td className="px-4 py-2">
                                         <button

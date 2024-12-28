@@ -13,7 +13,7 @@ export default {
         },
       },
       animation: {
-        shrinkBar: "shrinkBar 2s linear forwards",
+        shrinkBar: "shrinkBar 4s linear forwards",
       },
     },
   },
