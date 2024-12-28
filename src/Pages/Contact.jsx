@@ -20,6 +20,7 @@ export default function Contact() {
             setLoading(true);
             try {
                 // Get the current date and time
+                console.log("yaha tak")
                 const currentDate = new Date();
                 const formattedDate = format(currentDate, "MM/dd/yyyy"); // Date format (MM/dd/yyyy)
                 const formattedTime = format(currentDate, "hh:mm a"); // 12-hour format (hh:mm AM/PM)
@@ -43,7 +44,7 @@ export default function Contact() {
             } catch (err) {
                 setAlert({
                     type: 'error',
-                    message: 'Error adding shift. Please try again.',
+                    message: 'Error adding visitors. Please try again.',
                 });
             } finally {
                 setLoading(false);
@@ -162,9 +163,7 @@ export default function Contact() {
                                     className="w-100 mt-2 py-3 px-3 rounded-lg bg-white border border-gray-400 text-gray-800 font-semibold focus:border-blue-500 focus:outline-none"
                                 />
                             </div>
-                            <button
-
-                                type="submit"
+                            <button type="submit"
                                 className="md:w-32 bg-blue-700 hover:bg-blue-dark text-white font-semibold text-xl py-3 px-6 rounded-lg mt-3 hover:bg-blue-900 transition ease-in-out duration-300"
                                 disabled={loading}
                             >

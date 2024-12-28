@@ -69,20 +69,20 @@ const AddStudent = () => {
     setIsSubmitting(true);
     const runningShiftStatus = [];
 
+    // Generate running shift status
     studentData.shifts.map((item) => {
       runningShiftStatus.push({
         shiftName: item,
         eligibleTill: studentData.payment.eligibleTill,
-      })
-    })
-
+      });
+    });
 
     try {
       // 1. Upload files (photo and Aadhaar) to Firebase Storage
       const photoUrl = await uploadFileToStorage(files.photo, "photos");
       const aadhaarUrl = await uploadFileToStorage(files.aadhaar, "aadhaars");
 
-      // 2. Store data in Firestore
+      // 2. Prepare student data for Firestore
       const studentId = `STU${Date.now()}`; // Generate a unique student ID
       const finalData = {
         studentId,
@@ -105,17 +105,40 @@ const AddStudent = () => {
         runningShiftStatus,
       };
 
-      const studentRef = collection(db, "students"); // Updated Firestore collection name
+      // 3. Add student data to Firestore
+      const studentRef = collection(db, "students"); // Firestore collection name
       await addDoc(studentRef, finalData);
 
       alert("Student data added successfully!");
     } catch (error) {
-      console.error("Error adding student:", error);
-      alert("An error occurred. Please try again.");
+      console.error("Error adding student data:", error);
+      alert("Failed to add student data. Please try again.");
+      setIsSubmitting(false); // Stop submission flow if student data fails
+      return; // Exit early if this step fails
     }
 
-    setIsSubmitting(false);
+    try {
+      // 4. Add data to the "income" collection
+      const incomeData = {
+        name: studentData.name, // Student's name
+        date: new Date().toISOString(), // Current date (ISO string format)
+        amountPaid: studentData.payment.amount, // Amount paid
+        mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
+        message: `New Admission for ${studentData.shifts.join(", ")}`, // Custom message
+      };
+
+      const incomeRef = collection(db, "income"); // Firestore collection for income
+      await addDoc(incomeRef, incomeData);
+
+      alert("Income data added successfully!");
+    } catch (error) {
+      console.error("Error adding income data:", error);
+      alert("Failed to add income data. Please try again.");
+    }
+
+    setIsSubmitting(false); // Reset submission state after both operations
   };
+
 
   // Upload a file to Firebase Storage
   const uploadFileToStorage = async (file, folder) => {
