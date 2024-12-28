@@ -6,6 +6,8 @@ import {
     getDocs,
     getDoc,
     updateDoc,
+    addDoc,
+    serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../Firebase";
 import { Link } from "react-router-dom";
@@ -54,19 +56,19 @@ const ActiveStudents = () => {
 
         console.log("Updated Payment:", updatedPayment);
 
+
+        // Reference to the specific student document in Firebase
+        const studentDocRef = doc(db, "students", studentId);
+
+        // Fetch the existing student data
+        const studentDoc = await getDoc(studentDocRef);
+        if (!studentDoc.exists()) {
+            console.error("Student not found");
+            return;
+        }
+
+        const studentData = studentDoc.data();
         try {
-            // Reference to the specific student document in Firebase
-            const studentDocRef = doc(db, "students", studentId);
-
-            // Fetch the existing student data
-            const studentDoc = await getDoc(studentDocRef);
-            if (!studentDoc.exists()) {
-                console.error("Student not found");
-                return;
-            }
-
-            const studentData = studentDoc.data();
-
             // Assuming `updatedPayment.shift` contains the list of shifts to renew (e.g., ["Evening"])
             const updatedRunningShiftStatus = studentData.runningShiftStatus.map((item) => {
                 // Check if the current shift needs to be renewed
@@ -130,6 +132,26 @@ const ActiveStudents = () => {
         } catch (error) {
             console.error("Error updating student data:", error);
         }
+
+        try {
+            // 4. Add data to the "income" collection
+            const incomeData = {
+                name: studentData.name, // Student's name
+                date: new Date().toISOString(), // Current date (ISO string format)
+                amountPaid: studentData.payment.amount, // Amount paid
+                mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
+                message: `Upgrade in  ${studentData.shifts.join(", ")} shift`, // Custom message
+                timestamp: serverTimestamp(), // Add server-side timestamp for ordering
+            };
+
+            const incomeRef = collection(db, "income"); // Firestore collection for income
+            await addDoc(incomeRef, incomeData);
+
+            alert("Income data added successfully!");
+        } catch (error) {
+            console.error("Error adding income data:", error);
+            alert("Failed to add income data. Please try again.");
+        }
     };
 
     const handleShiftChange = (e) => {
@@ -178,7 +200,7 @@ const ActiveStudents = () => {
 
                 // Filter students whose 'eligibleTill' date is greater than today
                 const eligibleStudent = allStudents.filter((item) =>
-                    new Date(item.payment.eligibleTill) > new Date()
+                    item.runningShiftStatus.some((item) => new Date(item.eligibleTill) > new Date())
                 );
 
                 setStudent(eligibleStudent); // Update the state with filtered students
@@ -262,8 +284,8 @@ const ActiveStudents = () => {
                                                             </label>
                                                             <div className="flex gap-2">
                                                                 {shifts &&
-                                                                    shifts.map((shift  , index) => (
-                                                                        <div key={shift+index}>
+                                                                    shifts.map((shift, index) => (
+                                                                        <div key={shift + index}>
                                                                             <input
                                                                                 type="checkbox"
                                                                                 value={shift.name}

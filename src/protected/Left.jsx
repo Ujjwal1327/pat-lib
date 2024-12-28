@@ -3,11 +3,16 @@ import PageTitle from "../components/PageTitle";
 import {
     collection, getDocs, getDoc, doc,
     updateDoc,
+    addDoc,
 } from "firebase/firestore";
 import { db } from "../Firebase";
 import Loading from "../components/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons"; // for cross icon
+
+import { serverTimestamp } from "firebase/firestore"; // Import serverTimestamp
+
+
 
 
 const Left = () => {
@@ -46,13 +51,13 @@ const Left = () => {
     const handleRenewSubmit = async (e) => {
         e.preventDefault();
         const studentId = id; // Assume `id` is the current student ID being updated
-    
+
         // Ensure renewData is valid
         if (!renewData) {
             console.error("Renew data is undefined or null");
             return;
         }
-    
+
         // Safely update the payment object
         const updatedPayment = {
             shift: Array.isArray(renewData.shift) ? renewData.shift : [], // Ensure it's an array
@@ -63,34 +68,34 @@ const Left = () => {
             seat: renewData.seat || "unknown",
             dues: renewData.dues || 0,
         };
-    
+
         console.log("Updated Payment:", updatedPayment);
-    
+
+        // Reference to the specific student document in Firebase
+        const studentDocRef = doc(db, "students", studentId);
+
+        // Fetch the existing student data
+        const studentDoc = await getDoc(studentDocRef);
+        if (!studentDoc.exists()) {
+            console.error("Student not found");
+            return;
+        }
+
+        const studentData = studentDoc.data();
+        if (!studentData) {
+            console.error("Student data is undefined or null");
+            return;
+        }
+
+        // Update running shift status
+        const updatedRunningShiftStatus = Array.isArray(updatedPayment.shift)
+            ? updatedPayment.shift.map((item) => ({
+                shiftName: item,
+                eligibleTill: updatedPayment.eligibleTill,
+            }))
+            : [];
         try {
-            // Reference to the specific student document in Firebase
-            const studentDocRef = doc(db, "students", studentId);
-    
-            // Fetch the existing student data
-            const studentDoc = await getDoc(studentDocRef);
-            if (!studentDoc.exists()) {
-                console.error("Student not found");
-                return;
-            }
-    
-            const studentData = studentDoc.data();
-            if (!studentData) {
-                console.error("Student data is undefined or null");
-                return;
-            }
-    
-            // Update running shift status
-            const updatedRunningShiftStatus = Array.isArray(updatedPayment.shift)
-                ? updatedPayment.shift.map((item) => ({
-                      shiftName: item,
-                      eligibleTill: updatedPayment.eligibleTill,
-                  }))
-                : [];
-    
+
             // Safely update the student data
             const updatedStudentData = {
                 ...studentData,
@@ -120,17 +125,41 @@ const Left = () => {
                     },
                 ],
             };
-    
+
             // Update the student document in Firebase
             await updateDoc(studentDocRef, updatedStudentData);
-    
+
             console.log("Student data updated successfully");
             setIsModalOpen(false); // Close the modal after submitting
         } catch (error) {
             console.error("Error updating student data:", error);
         }
+
+
+        try {
+            // 4. Add data to the "income" collection
+            console.log("a")
+            const incomeData = {
+                name: studentData.name, // Student's name
+                date: new Date().toISOString(), // Current date (ISO string format)
+                amountPaid: studentData.payment.amount, // Amount paid
+                mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
+                message: `After being Left Renew in ${studentData.shifts.join(", ")}`, // Custom message
+                timestamp: serverTimestamp(), // Add server-side timestamp for ordering
+            };
+            console.log(incomeData)
+            const incomeRef = collection(db, "income"); // Firestore collection for income
+            await addDoc(incomeRef, incomeData);
+            console.log("b")
+            alert("Income data added successfully!");
+        } catch (error) {
+            console.error("Error adding income data:", error);
+            alert("Failed to add income data. Please try again.");
+        }
+
+
     };
-    
+
 
     const handleShiftChange = (e) => {
         const { value, checked } = e.target;

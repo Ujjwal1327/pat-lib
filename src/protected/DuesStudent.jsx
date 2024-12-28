@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/PageTitle";
+import { serverTimestamp } from "firebase/firestore"; // Import serverTimestamp
+
 import {
     collection, getDocs, getDoc, doc,
     updateDoc,
+    addDoc,
 } from "firebase/firestore";
 import { db } from "../Firebase";
 import Loading from "../components/Loading";
@@ -25,22 +28,22 @@ export default function DuesStudent() {
 
     }
     const clearDues = async (id) => {
+
+        // Reference to the specific student document
+        const studentDocRef = doc(db, "students", id);
+
+        // Fetch the current data of the student
+        const studentDoc = await getDoc(studentDocRef);
+
+        // Check if the document exists
+        if (!studentDoc.exists()) {
+            console.error("Student not found");
+            return;
+        }
+
+        // Get the existing student data
+        const studentData = studentDoc.data();
         try {
-            // Reference to the specific student document
-            const studentDocRef = doc(db, "students", id);
-
-            // Fetch the current data of the student
-            const studentDoc = await getDoc(studentDocRef);
-
-            // Check if the document exists
-            if (!studentDoc.exists()) {
-                console.error("Student not found");
-                return;
-            }
-
-            // Get the existing student data
-            const studentData = studentDoc.data();
-
             // Update the dues field to 0 in the payment object
             const updatedStudentData = {
                 ...studentData,
@@ -66,6 +69,30 @@ export default function DuesStudent() {
         } catch (error) {
             console.error("Error clearing dues:", error);
         }
+
+
+
+        try {
+          // 4. Add data to the "income" collection
+          const incomeData = {
+            name: studentData.name, // Student's name
+            date: new Date().toISOString(), // Current date (ISO string format)
+            amountPaid: studentData.payment.dues, // Amount paid
+            mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
+            message: `Dues clear ${studentData.shifts.join(", ")}`, // Custom message
+            timestamp: serverTimestamp(), // Add server-side timestamp for ordering
+          };
+        
+          const incomeRef = collection(db, "income"); // Firestore collection for income
+          await addDoc(incomeRef, incomeData);
+        
+          alert("Income data added successfully!");
+        } catch (error) {
+          console.error("Error adding income data:", error);
+          alert("Failed to add income data. Please try again.");
+        }
+        
+
     };
 
     // Fetch data from Firebase on component mount

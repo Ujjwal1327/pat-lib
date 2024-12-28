@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { storage, db } from "../Firebase"; // Import Firebase config
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { serverTimestamp } from "firebase/firestore"; // Import serverTimestamp
+
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import PageTitle from "../components/PageTitle";
 
@@ -117,6 +119,7 @@ const AddStudent = () => {
       return; // Exit early if this step fails
     }
 
+
     try {
       // 4. Add data to the "income" collection
       const incomeData = {
@@ -125,6 +128,7 @@ const AddStudent = () => {
         amountPaid: studentData.payment.amount, // Amount paid
         mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
         message: `New Admission for ${studentData.shifts.join(", ")}`, // Custom message
+        timestamp: serverTimestamp(), // Add server-side timestamp for ordering
       };
 
       const incomeRef = collection(db, "income"); // Firestore collection for income
@@ -135,6 +139,7 @@ const AddStudent = () => {
       console.error("Error adding income data:", error);
       alert("Failed to add income data. Please try again.");
     }
+
 
     setIsSubmitting(false); // Reset submission state after both operations
   };
