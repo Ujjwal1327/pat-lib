@@ -9,9 +9,9 @@ import PageTitle from "../components/PageTitle";
 
 const AddStudent = () => {
   const [shifts, setShifts] = useState([]);
+  const [registrationNumber, setRegistrationNumber] = useState("");
   const [studentData, setStudentData] = useState({
     name: "",
-    fatherName: "",
     mobile: "",
     address: "",
     seatNo: "",
@@ -88,6 +88,7 @@ const AddStudent = () => {
       const studentId = `STU${Date.now()}`; // Generate a unique student ID
       const finalData = {
         studentId,
+        registrationNumber, // Add registration number here
         ...studentData,
         documents: {
           photo: photoUrl,
@@ -119,7 +120,6 @@ const AddStudent = () => {
       return; // Exit early if this step fails
     }
 
-
     try {
       // 4. Add data to the "income" collection
       const incomeData = {
@@ -139,7 +139,6 @@ const AddStudent = () => {
       console.error("Error adding income data:", error);
       alert("Failed to add income data. Please try again.");
     }
-
 
     setIsSubmitting(false); // Reset submission state after both operations
   };
@@ -178,6 +177,27 @@ const AddStudent = () => {
     fetchShifts();
   }, []);
 
+  useEffect(() => {
+    const fetchStudentCount = async () => {
+      try {
+        const studentRef = collection(db, "students");
+        const querySnapshot = await getDocs(studentRef);
+
+        // Check if the collection is empty
+        if (querySnapshot.empty) {
+          setRegistrationNumber("Reg-1"); // If no students, start with Reg-1
+        } else {
+          const count = querySnapshot.size;
+          setRegistrationNumber(`Reg-${count + 1}`); // Increment based on current count
+        }
+      } catch (error) {
+        console.error("Error fetching student count:", error);
+      }
+    };
+
+    fetchStudentCount();
+  }, []);
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4 w-[90%] p-4 mx-auto my-10">
       <PageTitle title="Add student" />
@@ -195,12 +215,13 @@ const AddStudent = () => {
         />
         <input
           type="text"
-          name="fatherName"
-          placeholder="Father's Name"
-          value={studentData.fatherName}
-          onChange={handleInputChange}
+          name="registrationNumber"
+          value={registrationNumber}
+          disabled
+          placeholder="Registration Number"
           className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
+
         <input
           type="text"
           name="mobile"

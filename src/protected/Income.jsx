@@ -17,6 +17,7 @@ const Income = () => {
         ...doc.data(),
       }));
       setIncomeList(incomeData);
+      console.log(incomeList)
       setLoading(false);
     } catch (error) {
       console.error("Error fetching income data:", error);

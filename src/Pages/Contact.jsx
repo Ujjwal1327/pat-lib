@@ -31,6 +31,7 @@ export default function Contact() {
                     reminder: 0,
                     date: formattedDate,  // Adding the date
                     time: formattedTime,  // Adding the time
+                    createdAt: Timestamp.now(),
                 };
 
                 const docRef = await addDoc(visitorsCollectionRef, newVisitor);

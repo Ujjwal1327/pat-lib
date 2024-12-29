@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs , query, orderBy} from "firebase/firestore";
 import { db } from "../Firebase";
 
 const ExpenseList = () => {
@@ -17,12 +17,14 @@ const ExpenseList = () => {
     setLoading(true);
     setError(null); // Reset error state
     try {
-      const querySnapshot = await getDocs(collection(db, "expenses"));
+      // Query expenses in ascending order by date
+      const q = query(collection(db, "expenses"), orderBy("date", "desc")); // Use "desc" for reverse order
+      const querySnapshot = await getDocs(q);
       const expensesData = querySnapshot.docs.map((doc) => ({
         id: doc.id, // Capture the document ID
         ...doc.data(), // Spread the document data
       }));
-
+  
       setExpenses(expensesData);
       setFilteredExpenses(expensesData); // Initially, show all expenses
     } catch (err) {
@@ -74,7 +76,7 @@ const ExpenseList = () => {
     setStartDate("");
     setEndDate("");
   };
-
+console.log(expenses)
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h1 className="text-2xl font-bold text-gray-700 mb-6">Expense List</h1>
