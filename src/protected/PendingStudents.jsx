@@ -135,25 +135,25 @@ const PendingStudents = () => {
 
 
         try {
-          // 4. Add data to the "income" collection
-          const incomeData = {
-            name: studentData.name, // Student's name
-            date: new Date().toISOString(), // Current date (ISO string format)
-            amountPaid: studentData.payment.amount, // Amount paid
-            mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
-            message: `Renew in ${studentData.shifts.join(", ")}`, // Custom message
-            timestamp: serverTimestamp(), // Add server-side timestamp for ordering
-          };
-        
-          const incomeRef = collection(db, "income"); // Firestore collection for income
-          await addDoc(incomeRef, incomeData);
-        
-          alert("Income data added successfully!");
+            // 4. Add data to the "income" collection
+            const incomeData = {
+                name: studentData.name, // Student's name
+                date: new Date().toISOString(), // Current date (ISO string format)
+                amountPaid: studentData.payment.amount, // Amount paid
+                mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
+                message: `Renew in ${studentData.shifts.join(", ")}`, // Custom message
+                timestamp: serverTimestamp(), // Add server-side timestamp for ordering
+            };
+
+            const incomeRef = collection(db, "income"); // Firestore collection for income
+            await addDoc(incomeRef, incomeData);
+
+            alert("Income data added successfully!");
         } catch (error) {
-          console.error("Error adding income data:", error);
-          alert("Failed to add income data. Please try again.");
+            console.error("Error adding income data:", error);
+            alert("Failed to add income data. Please try again.");
         }
-        
+
 
 
 
@@ -246,25 +246,21 @@ const PendingStudents = () => {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr>
-                                <td colSpan="5" className="text-center px-4 py-6">
-                                    <Loading /> {/* Show loading spinner */}
-                                </td>
-                            </tr>
+                            <Loading />
                         ) : student.length > 0 ? (
                             student.map((each, index) => (
                                 <tr key={each.id} className="border-b hover:bg-gray-100">
                                     <td className="px-4 py-2">{index + 1}</td>
-                                    <td className="px-4 py-2 capitalize">{each.name}</td>
+                                    <td className="px-4 py-3 capitalize font-bold text-xl text-gray-700">{each.name}</td>
                                     <td className="px-4 py-2">{each.mobile}</td>
                                     <td className="px-4 py-2">
                                         {each.runningShiftStatus
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
-                                            .map((item) => <span> {item.shiftName} </span>)}
+                                            .map((item ,index) => <span className="inline-block px-2 py-1 bg-blue-100 text-blue-600 rounded-lg m-1" key={item.id}> {item.shiftName} </span>)}
                                     </td>
-                                    <td className="px-4 py-2 text-red-500 font-semibold">
+                                    <td className="px-4 py-1 inline-block  rounded-lg m-4 bg-red-100 text-red-600">
                                         {each.runningShiftStatus
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)

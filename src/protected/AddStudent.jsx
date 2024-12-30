@@ -14,7 +14,7 @@ const AddStudent = () => {
     name: "",
     mobile: "",
     address: "",
-    seatNo: "",
+    seatNo: 0,
     shifts: [], // Array to store selected shifts
     payment: {
       amount: "",

@@ -1,700 +1,96 @@
-import { faChair } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../Firebase";
+import Loading from "../components/Loading";
+function SeatingLayout() {
+  const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-const Seat = () => {
-    return (
-        <div id='mainContainer' className='flex flex-col items-start justify-start gap-2 p-10 sm:p-20'>
+  const totalSeats = 125; // Define the total number of seats in your library
+  const rowsPerColumn = 8; // Define how many rows per column
 
-            <div id='wrapper' className='flex flex-col items-end justify-center gap-12 border-[3px] border-blue-600 p-3 flex-nowrap'>
-                <p class="font-semibold p-3 text-2xl bg-blue-500 text-white">Washroom area</p>
-                <hr className='w-full h-2 bg-black' />
-                {/* 7 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>7th</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        setLoading(true);
+        const querySnapshot = await getDocs(collection(db, "students"));
+        const allStudents = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setStudents(allStudents);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchStudents();
+  }, []);
 
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
+  const occupiedSeats = students.map((student) => parseInt(student.seatNo, 10)); // Ensure numbers are parsed
 
-                    </div>
-                </div>
-                {/* 6 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>6th</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
+  // Generate seat numbers in a column-first layout
+  const generateColumnFirstLayout = () => {
+    const layout = [];
+    const columns = Math.ceil(totalSeats / rowsPerColumn);
 
+    for (let col = 0; col < columns; col++) {
+      const columnSeats = [];
+      for (let row = 0; row < rowsPerColumn; row++) {
+        const seatNumber = col * rowsPerColumn + row + 1;
+        if (seatNumber > totalSeats) break; // Prevent excess seat numbers
+        columnSeats.push(seatNumber);
+      }
+      layout.push(columnSeats);
+    }
 
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
+    return layout;
+  };
 
-                    </div>
-                </div>
-                {/* 5 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>5th</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
+  const seatLayout = generateColumnFirstLayout();
 
+  const getStudentDetails = (seatNumber) =>
+    students.find((student) => parseInt(student.seatNo, 10) === seatNumber);
 
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
+  return (
+    <div className="p-6 bg-gray-100 min-h-full">
+      <h1 className="text-2xl font-bold text-gray-700 mb-4">Seating Layout</h1>
+      {loading ? (
+        <Loading />
+      ) : (
+        <div className="flex gap-4"> {/* Flex container for columns */}
+          {seatLayout.map((column, colIndex) => (
+            <div key={colIndex} className="flex flex-col gap-2">
+              {column.map((seatNumber) => {
+                const student = getStudentDetails(seatNumber);
+                const isOccupied = !!student;
 
-                    </div>
-                </div>
-                {/* 4 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>4th</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
-
-                    </div>
-                </div>
-                {/* 3 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>3rd</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
-
-                    </div>
-                </div>
-                {/* 2 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>2nd</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
-
-                    </div>
-                </div>
-                {/* 1 row */}
-                <div id='row' className='flex justify-center items-center gap-3 flex-nowrap'>
-                    <div>
-                        <p className='font-bold text-xl text-gray-700'>1st</p>
-                    </div>
-                    <div className='flex flex-col gap-2'>
-                        <div id="top" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <FontAwesomeIcon icon={faChair} className='text-gray-600' />
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <div id="bottom" className='flex items-center justify-center gap-2'>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800   flex items-center justify-center text-sm'>
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800  bg-gray-500 text-white flex items-center justify-center text-sm'>2
-
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                            <div className='flex flex-col gap-1 items-center justify-center text-xl text-blue-700'>
-                                <div className='w-8 h-8 border-[3px] border-gray-800 items-center justify-center flex text-sm'>1
-                                </div>
-                                <FontAwesomeIcon icon={faChair} className='rotate-180 text-gray-600' />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='w-16 h-16'>
-                    </div>
-                </div>
-                <p class="font-semibold p-3 text-2xl bg-blue-500 text-white">Gate</p>
+                return (
+                  <div
+                    key={seatNumber}
+                    className={`w-16 h-16 flex items-center justify-center rounded-md font-bold relative group ${
+                      isOccupied ? "bg-red-500 text-white" : "bg-green-200 text-gray-700"
+                    }`}
+                  >
+                    {seatNumber}
+                    {/* Tooltip */}
+                    {isOccupied && (
+                      <div className="z-10 cursor-pointer min-w-24 hvoer:shadow-lg absolute left-20 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white text-sm rounded-md p-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <p className="font-semibold text-xl capitalize">{student.name}</p>
+                        <p> {student.registrationNumber}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-
-
-
+          ))}
         </div>
-    )
+      )}
+    </div>
+  );
 }
 
-export default Seat
+export default SeatingLayout;

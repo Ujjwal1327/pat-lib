@@ -216,58 +216,76 @@ const ActiveStudents = () => {
 
     console.log(student)
     return (
-        <div className="p-6 bg-gray-100 min-h-full">
+        <div className="p-6 bg-gray-50 min-h-full">
             <PageTitle title="Active Students" />
-            <h1 className="text-2xl font-bold text-gray-700 mb-4">Active Students</h1>
+            <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Active Students</h1>
+
             <div className="overflow-x-auto">
-                <table className="w-full table-auto border-collapse bg-white shadow-md rounded-lg">
+                <table className="w-full table-auto border-collapse bg-white shadow-lg rounded-lg">
                     <thead>
-                        <tr className="bg-blue-500 text-white">
-                            <th className="px-4 py-2 text-left">S. No.</th>
-                            <th className="px-4 py-2 text-left">Name</th>
-                            <th className="px-4 py-2 text-left">Mobile</th>
-                            <th className="px-4 py-2 text-left">Active Shift</th>
-                            <th className="px-4 py-2 text-left">Due Date</th>
-                            <th className="px-4 py-2 text-left">Action</th>
-                            <th className="px-4 py-2 text-left">Detail</th>
+                        <tr className="bg-blue-600 text-white text-lg">
+                            <th className="px-4 py-3 text-left">S. No.</th>
+                            <th className="px-4 py-3 text-left">Name</th>
+                            <th className="px-4 py-3 text-left">Mobile</th>
+                            <th className="px-4 py-3 text-left">Active Shift</th>
+                            <th className="px-4 py-3 text-left">Due Date</th>
+                            <th className="px-4 py-3 text-left">Action</th>
+                            <th className="px-4 py-3 text-left">Detail</th>
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr>
-                                <td colSpan="5" className="text-center px-4 py-6">
-                                    <Loading /> {/* Show loading spinner */}
-                                </td>
-                            </tr>
+                            <Loading />
                         ) : student.length > 0 ? (
                             student.map((each, index) => (
-                                <tr key={each.id} className="border-b hover:bg-gray-100">
-                                    <td className="px-4 py-2">{index + 1}</td>
-                                    <td className="px-4 py-2 capitalize">{each.name}</td>
-                                    <td className="px-4 py-2">{each.mobile}</td>
-                                    <td className="px-4 py-2 whitespace-nowrap">
-                                        {each.runningShiftStatus && each.runningShiftStatus.map((item) => " | " + item.shiftName + " | ")}
+                                <tr
+                                    key={each.id}
+                                    className={`border-b ${index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
+                                        } hover:bg-gray-200`}
+                                >
+                                    <td className="px-4 py-3 font-medium text-gray-800">
+                                        {index + 1}
                                     </td>
-                                    <td className="px-4 py-2 whitespace-nowrap">
+                                    <td className="px-4 py-3 capitalize font-bold text-xl text-gray-700">
+                                        {each.name}
+                                    </td>
+                                    <td className="px-4 py-3 text-gray-700">{each.mobile}</td>
+                                    <td className="px-4 py-3 whitespace-nowrap text-gray-600">
+                                        {each.runningShiftStatus &&
+                                            each.runningShiftStatus.map((item) => (
+                                                <span
+                                                    key={item.id + index}
+                                                    className="inline-block px-2 py-1 bg-blue-100 text-blue-600 rounded-lg m-1"
+                                                >
+                                                    {item.shiftName}
+                                                </span>
+                                            ))}
+                                    </td>
+                                    <td className="px-4 py-3 whitespace-nowrap text-gray-600">
                                         {each.runningShiftStatus &&
                                             each.runningShiftStatus.map((item) => {
-                                                const isValid = new Date(item.eligibleTill) > new Date();
-                                                console.log(isValid ? "valid" : "crossed"); // Debug log
+                                                const isValid =
+                                                    new Date(item.eligibleTill) > new Date();
                                                 return (
-                                                    <span key={item + index} className={isValid ? "text-black" : "text-red-500"}>
-                                                        {" | " + item.eligibleTill + " | "}
+                                                    <span
+                                                        key={item + index + item.id}
+                                                        className={`inline-block px-2 py-1 rounded-lg m-1 ${isValid
+                                                            ? 'bg-green-100 text-green-600'
+                                                            : 'bg-red-100 text-red-600'
+                                                            }`}
+                                                    >
+                                                        {item.eligibleTill}
                                                     </span>
                                                 );
                                             })}
                                     </td>
-                                    <td className="px-4 py-2">
+                                    <td className="px-4 py-3">
                                         <button
                                             onClick={() => handleRenew(each.id)}
-                                            className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700"
+                                            className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600"
                                         >
                                             Upgrade
                                         </button>
-                                        {/* Modal popUp */}
                                         {isModalOpen && (
                                             <div className="fixed inset-0 bg-black bg-opacity-10 flex justify-center items-center z-50">
                                                 <div className="bg-white p-6 rounded-lg shadow-lg w-96 max-h-screen overflow-y-auto">
@@ -285,7 +303,7 @@ const ActiveStudents = () => {
                                                             <div className="flex gap-2">
                                                                 {shifts &&
                                                                     shifts.map((shift, index) => (
-                                                                        <div key={shift + index}>
+                                                                        <div key={shift.id + index}>
                                                                             <input
                                                                                 type="checkbox"
                                                                                 value={shift.name}
@@ -449,41 +467,40 @@ const ActiveStudents = () => {
                                                             onClick={() => setIsModalOpen(false)}
                                                             className="absolute top-2 right-2 text-xl text-red-500 hover:text-red-700"
                                                         >
-                                                            <FontAwesomeIcon icon={faTimes} />
+                                                            ✖
                                                         </button>
                                                     </form>
                                                 </div>
                                             </div>
                                         )}
-
                                     </td>
-                                    <td className="px-4 py-2">
-                                        {/* Add a Link to view student details */}
+                                    <td className="px-4 py-3">
                                         <Link
                                             to={`${each.id}`}
-                                            className="bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-700"
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded-lg hover:bg-yellow-600"
                                         >
                                             Details
                                         </Link>
                                     </td>
                                 </tr>
-
                             ))
                         ) : (
                             <tr>
-                                <td
-                                    colSpan="5"
-                                    className="text-center px-4 py-6 text-gray-500"
-                                >
-                                    No students found.
+                                <td colSpan="7" className="text-center px-4 py-8 text-gray-500">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <span className="text-5xl">😔</span>
+                                        <p>No active students found.</p>
+                                    </div>
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
+                
             </div>
         </div>
     );
+
 };
 
 export default ActiveStudents;

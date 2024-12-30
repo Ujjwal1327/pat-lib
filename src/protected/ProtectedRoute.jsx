@@ -24,7 +24,33 @@ const ProtectedRoute = ({ children }) => {
 
   if (isAuthenticated === null) {
     // Waiting for the authentication status check (optional loading state)
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col h-screen bg-gray-50">
+        {/* Header Skeleton */}
+        <div className="bg-gray-500 h-16 w-full animate-pulse mb-4  shadow-md"></div>
+
+        {/* Main Content Skeleton */}
+        <div className="flex-1 flex flex-col md:flex-row">
+          {/* Sidebar Skeleton */}
+          <div className="bg-gray-500 h-full w-full md:w-64 p-4 animate-pulse rounded-lg shadow-lg mb-4"></div>
+          {/* Main Skeleton */}
+          <div className="flex-1 bg-gray-100 animate-pulse p-6 rounded-lg shadow-md">
+            <div className="w-full h-8 mb-4 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-full md:w-3/4 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-1/2 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-1/3 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-full h-8 mb-4 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-full md:w-3/4 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-1/2 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-1/3 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-full h-8 mb-4 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-full md:w-3/4 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-1/2 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+            <div className="w-1/3 h-6 mb-2 bg-gray-400 animate-pulse rounded-md"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // Redirect if not authenticated

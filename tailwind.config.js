@@ -7,13 +7,14 @@ export default {
   theme: {
     extend: {
       keyframes: {
-        shrinkBar: {
-          "0%": { width: "100%" },
-          "100%": { width: "0%" },
+        pulse: {
+          "0%": { opacity: "0.5" },
+          "50%": { opacity: "0.7" },
+          "100%": { opacity: "0.15" },
         },
       },
       animation: {
-        shrinkBar: "shrinkBar 4s linear forwards",
+        pulse: "pulse 2s ease-in-out infinite",
       },
     },
   },
