@@ -43,7 +43,7 @@ const StudentTableComponent = ({ students, loading }) => {
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.name}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.payment.amount}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.payment.mode}</td>
-                <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.shifts.join(", ")}</td>
+                <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.shifts}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.payment.dues}</td>
               </tr>
             ))

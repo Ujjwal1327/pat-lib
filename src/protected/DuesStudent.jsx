@@ -106,15 +106,21 @@ export default function DuesStudent() {
         setSelectedMonth(month);
 
         if (month) {
-            const filtered = student.filter((item) =>
-                item.payment?.lastPaymentDate?.startsWith(month)
-            );
+            const filtered = student.filter((item) => {
+                const lastPaymentDate = item.payment?.lastPaymentDate?.toDate();
+                if (lastPaymentDate) {
+                    const formattedDate = `${lastPaymentDate.getFullYear()}-${(lastPaymentDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                    return formattedDate.startsWith(month); // comparing YYYY-MM format
+                }
+                return false;
+            });
             setFilteredStudents(filtered);
             setCurrentPage(1);
         } else {
             setFilteredStudents(student);
         }
     };
+
 
     return (
         <div className="p-6 bg-gray-100 min-h-full">

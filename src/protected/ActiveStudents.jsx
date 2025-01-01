@@ -13,12 +13,13 @@ import { db } from "../Firebase";
 import { Link } from "react-router-dom";
 import Loading from "../components/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons"; // for cross icon
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 const ActiveStudents = () => {
     const [student, setStudent] = useState([]); // Holds student data
     const [loading, setLoading] = useState(false); // Loading state
     const [shifts, setShifts] = useState([]);
+    const [alert, setAlert] = useState(null);
     const [id, setId] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false); // To control modal visibility
     const [renewData, setRenewData] = useState({
@@ -129,7 +130,9 @@ const ActiveStudents = () => {
 
             console.log("Student data updated successfully");
             setIsModalOpen(false); // Close the modal after submitting
+            setAlert({ type: "error", message: "data has been added." });
         } catch (error) {
+            setAlert({ type: "error", message: "Error in updating student data." });
             console.error("Error updating student data:", error);
         }
 
@@ -150,7 +153,7 @@ const ActiveStudents = () => {
             alert("Income data added successfully!");
         } catch (error) {
             console.error("Error adding income data:", error);
-            alert("Failed to add income data. Please try again.");
+            setAlert({ type: "error", message: "Error in saving income data." });
         }
     };
 
@@ -217,6 +220,11 @@ const ActiveStudents = () => {
     console.log(student)
     return (
         <div className="p-6 bg-gray-50 min-h-full">
+            {alert && <Alert
+                type={alert.type}
+                message={alert.message}
+                onClose={closeAlert}
+            />}
             <PageTitle title="Active Students" />
             <h1 className="text-3xl font-extrabold text-gray-800 mb-6">Active Students</h1>
 
@@ -496,7 +504,7 @@ const ActiveStudents = () => {
                         )}
                     </tbody>
                 </table>
-                
+
             </div>
         </div>
     );

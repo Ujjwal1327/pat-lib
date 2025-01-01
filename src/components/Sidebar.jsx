@@ -38,7 +38,7 @@ const Sidebar = ({ onMenuClick }) => {
             Expenses <FontAwesomeIcon icon={faChevronDown} />
           </button>
           {dropdown === "expenses" && (
-            <ul className="m-4 my-2">
+            <ul className="ml-4 my-2">
               <li className="mb-2">
                 <NavLink
                   to="expenses/overview"
@@ -93,7 +93,7 @@ const Sidebar = ({ onMenuClick }) => {
             Students <FontAwesomeIcon icon={faChevronDown} />
           </button>
           {dropdown === "students" && (
-            <ul className="m-4 my-2">
+            <ul className="ml-4 my-2">
               <li className="mb-2">
                 <NavLink
                   to="students/dues"

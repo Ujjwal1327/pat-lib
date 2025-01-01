@@ -1,62 +1,47 @@
-{
-    "id": "56DfyZ0gZbvt1lf4DiSZ",
-    "fatherName": "rohit",
-    "runningShiftStatus": [
-        {
-            "shiftName": "morning",
-            "eligibleTill": "2025-01-08"
+[
+    {
+        "id": "2mDsv3BMwiBcs6NsRAtR",
+        "status": "Active",
+        "dateOfJoining": "",
+        "documents": {
+            "photo": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/photos%2Fqr-code.png-1735672571910?alt=media&token=930aa84a-511d-4b23-9708-156014b4d561",
+            "aadhaar": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/aadhaars%2Flogo.jpg-1735672573448?alt=media&token=bf75e401-082c-4918-8772-960e8ea7808d"
         },
-        {
-            "eligibleTill": "2025-01-08",
-            "shiftName": "Evening"
-        }
-    ],
-    "name": "rohit",
-    "seatNo": "15",
-    "dateOfJoining": "2024-12-27",
-    "studentId": "STU1735308812180",
-    "mobile": "rohit",
-    "payment": {
-        "mode": "Cash",
-        "amount": "200",
-        "seat": "15",
-        "dateOfPayment": "2024-12-18",
-        "eligibleTill": "2025-01-08"
-    },
-    "documents": {
-        "photo": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/photos%2Fyoutube%20bannner.jpg-1735308801873?alt=media&token=a8f8b3cf-144d-4910-8d6e-c5a17e4a884b",
-        "aadhaar": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/aadhaars%2Fyoutube%20bannner.jpg-1735308808767?alt=media&token=38b5bf82-a770-4c55-a617-92738da17cea"
-    },
-    "shifts": [
-        "morning",
-        "Evening"
-    ],
-    "history": [
-        {
-            "payment": {
-                "amount": "0820",
-                "dateOfPayment": "2024-12-27",
-                "eligibleTill": "2025-01-27"
-            },
-            "shifts": [
-                "morning",
-                "Lunch",
-                "Night"
-            ]
+        "payment": {
+            "amount": "255",
+            "eligibleTill": "2025-01-24",
+            "dateOfPayment": "2025-01-22",
+            "mode": "Card"
         },
-        {
-            "shifts": [
-                "morning",
-                "Evening"
-            ],
-            "payment": {
-                "eligibleTill": "2025-01-08",
-                "mode": "Cash",
-                "seat": "15",
-                "amount": "200",
-                "dateOfPayment": "2024-12-18"
-            }
+        "seatNo": "1",
+        "mobile": "1349081",
+        "fatherName": "ajsf a",
+        "name": "motiya",
+        "history": [],
+        "address": "446 adfa54 ",
+        "shift": "Night"
+    },
+   
+    {
+        "id": "qiS0IkYbslJ3C6VPY5ss",
+        "seatNo": "15",
+        "payment": {
+            "eligibleTill": "2025-01-24",
+            "dateOfPayment": "2025-01-22",
+            "amount": "255",
+            "mode": "Card"
+        },
+        "shift": "Night",
+        "fatherName": "ajsf a",
+        "name": "chotiya",
+        "status": "Active",
+        "mobile": "1349081",
+        "dateOfJoining": "",
+        "address": "446 adfa54 ",
+        "history": [],
+        "documents": {
+            "aadhaar": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/aadhaars%2Flogo.jpg-1735672549592?alt=media&token=e74086c8-58d8-4a84-9a93-94bc61b21b04",
+            "photo": "https://firebasestorage.googleapis.com/v0/b/patna-library.firebasestorage.app/o/photos%2Fqr-code.png-1735672547429?alt=media&token=d2547380-68d8-45e1-a5bd-57ce6d5c2ab5"
         }
-    ],
-    "address": "rohit"
-}
+    }
+]

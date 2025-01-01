@@ -60,7 +60,7 @@ function SeatingLayout() {
       {loading ? (
         <Loading />
       ) : (
-        <div className="flex gap-4"> {/* Flex container for columns */}
+        <div className="flex gap-4 cursor-pointer"> {/* Flex container for columns */}
           {seatLayout.map((column, colIndex) => (
             <div key={colIndex} className="flex flex-col gap-2">
               {column.map((seatNumber) => {

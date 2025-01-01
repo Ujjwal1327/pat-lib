@@ -10,7 +10,7 @@ const ExpenseList = () => {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const expensesPerPage = 2; // Number of expenses per page
+  const expensesPerPage = 10; // Number of expenses per page
 
   // Date filter state
   const [startDate, setStartDate] = useState("");

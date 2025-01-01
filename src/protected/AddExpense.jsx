@@ -20,22 +20,29 @@ const AddExpense = () => {
         const { name, value } = e.target;
         setExpenseData((prevData) => ({
             ...prevData,
-            [name]: value,
+            [name]: value.trimStart(), // Prevents leading spaces
         }));
     };
-
+    const closeAlert = () => {
+        setAlert(null);
+    };
+    // Enhanced Validation Function
     const validateForm = () => {
         const { title, amount, date, category, paymentMode, description } = expenseData;
-        if (!title || !amount || !date || !category || !paymentMode || !description) {
-            return "Please fill out all fields.";
-        }
-        if (isNaN(amount) || Number(amount) <= 0) {
+        if (!title) return "Expense Title is required.";
+        if (title.length < 3) return "Expense Title must be at least 3 characters long.";
+
+        if (!amount) return "Amount is required.";
+        if (isNaN(amount) || Number(amount) <= 0)
             return "Amount should be a positive number.";
-        }
+        if (!date) return "Date is required.";
         const currentDate = new Date().toISOString().split("T")[0];
-        if (date > currentDate) {
-            return "Date cannot be in the future.";
-        }
+        if (date > currentDate) return "Date cannot be in the future.";
+        if (!category) return "Please select a category.";
+        if (!paymentMode) return "Please select a payment mode.";
+
+        if (!description) return "Description is required.";
+        if (description.length < 10) return "Description must be at least 10 characters long.";
         return null;
     };
 
@@ -43,28 +50,22 @@ const AddExpense = () => {
         e.preventDefault();
         setLoading(true);
 
+        // Validate form inputs
         const error = validateForm();
         if (error) {
-            setAlert({
-                type: "error",
-                message: error,
-            });
-
+            setAlert({ type: "error", message: error });
             setLoading(false);
-            setTimeout(() => {
-                setAlert(null);
-            }, 2500);
+            setTimeout(() => setAlert(null), 2500);
             return;
         }
 
+        // Add expense to Firestore
         try {
             await addDoc(collection(db, "expenses"), expenseData);
 
-            setAlert({
-                type: "success",
-                message: "Expense added successfully!",
-            });
+            setAlert({ type: "success", message: "Expense added successfully!" });
 
+            // Reset form
             setExpenseData({
                 title: "",
                 amount: "",
@@ -75,31 +76,31 @@ const AddExpense = () => {
             });
         } catch (error) {
             console.error("Error adding expense: ", error);
-
-            setAlert({
-                type: "error",
-                message: "Failed to add expense. Please try again.",
-            });
+            setAlert({ type: "error", message: "Failed to add expense. Please try again." });
         } finally {
-            setLoading(false);
+            setTimeout(() => {
+                setLoading(false);
+            }, 500);
         }
 
-        setTimeout(() => {
-            setAlert(null);
-        }, 1500);
+
+        setTimeout(() => setAlert(null), 1500);
     };
-    console.log(alert)
+
     return (
         <div className="min-h-screen flex justify-center items-center bg-gray-50">
+
             <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
                 <h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">
                     Add Expense
                 </h1>
 
                 {/* Alert Box */}
-                {alert &&
-                    <Alert type={alert.type} message={alert.message} />
-                }
+                {alert && <Alert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={closeAlert}
+                />}
 
                 {/* Form */}
                 <form onSubmit={handleSubmit}>
@@ -195,27 +196,38 @@ const AddExpense = () => {
                         <div className="text-center">
                             <button
                                 type="submit"
-                                className="bg-blue-700  w-full py-2 rounded-md text-white text-xl mt-5 hover:bg-blue-500 hover:shadow-lg transition duration-300 flex items-center justify-center"
+                                className="bg-blue-700 w-full py-2 rounded-md text-white text-xl mt-5 hover:bg-blue-500 hover:shadow-lg transition duration-300 flex items-center justify-center"
                                 disabled={loading}
                             >
                                 {loading ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-6 h-6 animate-spin">
-                                        <circle fill="white" stroke="white" strokeWidth="15" r="15" cx="40" cy="65">
-                                            <animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4" />
-                                        </circle>
-                                        <circle fill="white" stroke="white" strokeWidth="15" r="15" cx="100" cy="65">
-                                            <animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2" />
-                                        </circle>
-                                        <circle fill="white" stroke="white" strokeWidth="15" r="15" cx="160" cy="65">
-                                            <animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0" />
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 200 200"
+                                        className="w-6 h-6 animate-spin"
+                                    >
+                                        <circle
+                                            fill="white"
+                                            stroke="white"
+                                            strokeWidth="15"
+                                            r="15"
+                                            cx="40"
+                                            cy="65"
+                                        >
+                                            <animate
+                                                attributeName="cy"
+                                                calcMode="spline"
+                                                dur="2"
+                                                values="65;135;65;"
+                                                keySplines=".5 0 .5 1;.5 0 .5 1"
+                                                repeatCount="indefinite"
+                                                begin="-.4"
+                                            />
                                         </circle>
                                     </svg>
                                 ) : (
                                     "Add Expense"
                                 )}
                             </button>
-                            {/* Show loading spinner or message while the login process is ongoing */}
-
                         </div>
                     </div>
                 </form>
