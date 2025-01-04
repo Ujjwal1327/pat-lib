@@ -13,12 +13,9 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default function DuesStudent() {
     const [student, setStudent] = useState([]);
-    const [filteredStudents, setFilteredStudents] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
-    const [selectedMonth, setSelectedMonth] = useState("");
 
     // Fetch students from Firebase
     useEffect(() => {
@@ -32,7 +29,6 @@ export default function DuesStudent() {
                 }));
                 const duesStudent = allStudents.filter((item) => Number(item.payment.dues) > 0);
                 setStudent(duesStudent);
-                setFilteredStudents(duesStudent);
             } catch (error) {
                 console.error("Error fetching student data:", error);
             } finally {
@@ -77,8 +73,6 @@ export default function DuesStudent() {
 
             const updatedStudents = student.filter((item) => item.id !== id);
             setStudent(updatedStudents);
-            setFilteredStudents(updatedStudents);
-            setIsModalOpen(false);
         } catch (error) {
             console.error("Error clearing dues:", error);
         }
@@ -94,52 +88,16 @@ export default function DuesStudent() {
     // Pagination logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = filteredStudents.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = student.slice(indexOfFirstItem, indexOfLastItem);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
-    // Filter students by month
-    const handleMonthChange = (e) => {
-        const month = e.target.value;
-        setSelectedMonth(month);
-
-        if (month) {
-            const filtered = student.filter((item) => {
-                const lastPaymentDate = item.payment?.lastPaymentDate?.toDate();
-                if (lastPaymentDate) {
-                    const formattedDate = `${lastPaymentDate.getFullYear()}-${(lastPaymentDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                    return formattedDate.startsWith(month); // comparing YYYY-MM format
-                }
-                return false;
-            });
-            setFilteredStudents(filtered);
-            setCurrentPage(1);
-        } else {
-            setFilteredStudents(student);
-        }
-    };
-
-
     return (
         <div className="p-6 bg-gray-100 min-h-full">
             <PageTitle title="Dues Students" />
             <h1 className="text-2xl font-bold text-gray-700 mb-4">Dues Students</h1>
-
-            {/* Month Filter */}
-            <div className="mb-4 flex justify-end">
-                <select
-                    className="border border-gray-300 rounded-md p-2"
-                    value={selectedMonth}
-                    onChange={handleMonthChange}
-                >
-                    <option value="">All Months</option>
-                    <option value="2024-12">December 2024</option>
-                    <option value="2024-11">November 2024</option>
-                    {/* Add more months as needed */}
-                </select>
-            </div>
 
             {/* Table */}
             <div className="overflow-x-auto">
@@ -166,7 +124,7 @@ export default function DuesStudent() {
                                         <div className="bg-gray-300 rounded h-6 w-24"></div>
                                     </td>
                                     <td className="px-4 py-3">
-                                        <              div className="bg-gray-300 rounded h-6 w-20"></div>
+                                        <div className="bg-gray-300 rounded h-6 w-20"></div>
                                     </td>
                                     <td className="px-4 py-3">
                                         <div className="bg-gray-300 rounded h-6 w-32"></div>
@@ -186,33 +144,11 @@ export default function DuesStudent() {
                                     <td className="px-4 py-2">{each.payment.dues}</td>
                                     <td className="px-4 py-2">
                                         <button
-                                            onClick={() => setIsModalOpen(true)}
+                                            onClick={() => clearDues(each.id)}
                                             className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700"
                                         >
                                             Clear
                                         </button>
-                                        {isModalOpen && (
-                                            <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50">
-                                                <div className="bg-white p-4 rounded-lg shadow-lg w-96">
-                                                    <h2 className="text-xl font-semibold mb-4">Clear Dues</h2>
-                                                    <p className="mb-4">
-                                                        Are you sure you want to clear dues of Rs. {each.payment.dues}?
-                                                    </p>
-                                                    <button
-                                                        onClick={() => clearDues(each.id)}
-                                                        className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 mr-2"
-                                                    >
-                                                        Yes
-                                                    </button>
-                                                    <button
-                                                        onClick={() => setIsModalOpen(false)}
-                                                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-700"
-                                                    >
-                                                        No
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        )}
                                     </td>
                                     <td className="px-4 py-2">
                                         <button
@@ -234,10 +170,9 @@ export default function DuesStudent() {
                     </tbody>
                 </table>
             </div>
-
             {/* Pagination */}
             <div className="flex justify-center mt-4">
-                {Array.from({ length: Math.ceil(filteredStudents.length / itemsPerPage) }).map(
+                {Array.from({ length: Math.ceil(student.length / itemsPerPage) }).map(
                     (_, index) => (
                         <button
                             key={index}

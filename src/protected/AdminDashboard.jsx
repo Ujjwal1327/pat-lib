@@ -53,7 +53,7 @@ const AdminDashboard = () => {
           title="Total Dues"
           amount={loading ? "Loading..." : totalDues}
           icon={faSkullCrossbones}
-          link="enquiries"
+          link="students/dues"
           bgColor="bg-gradient-to-r from-red-100 to-red-50"
           textColor="text-red-700"
         />
@@ -61,7 +61,7 @@ const AdminDashboard = () => {
           title="Profit This Month"
           amount={loading ? "Loading..." : totalIncome}
           icon={faIndianRupee}
-          link="enquiries"
+          link="income/overview"
           bgColor="bg-gradient-to-r from-green-100 to-green-50"
           textColor="text-green-700"
         />
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
           title="Expenditure"
           amount={loading ? "Loading..." : totalExpense}
           icon={faArrowAltCircleDown}
-          link="enquiries"
+          link="expenses/overview"
           bgColor="bg-gradient-to-r from-yellow-100 to-yellow-50"
           textColor="text-yellow-700"
         />
@@ -81,7 +81,7 @@ const AdminDashboard = () => {
         <div className="w-full lg:w-3/5 bg-white shadow-lg rounded-lg py-6 px-3">
           <div className="flex items-center justify-between mb-6">
             <p className="text-blue-700 font-bold text-lg sm:text-2xl">Recent Admission</p>
-            <Link to="students/overview" className="text-white text-sm sm:text-lg px-4 py-2 bg-blue-700 hover:bg-blue-600 transition rounded-lg">
+            <Link to="students/all" className="text-white text-sm sm:text-lg px-4 py-2 bg-blue-700 hover:bg-blue-600 transition rounded-lg">
               More
             </Link>
           </div>

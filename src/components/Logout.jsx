@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";  // Import the useNavigate hook for navigation
-import { getAuth, signOut } from "firebase/auth";  // Import Firebase Authentication methods
+import { signOut } from "firebase/auth";  // Import Firebase Authentication methods
 import { auth } from '../Firebase';  // Import auth from your firebase.js file
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLongArrowUp, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 
 export default function Logout() {
     const navigate = useNavigate();  // Use useNavigate for programmatic navigation
@@ -11,7 +11,7 @@ export default function Logout() {
         signOut(auth)  // Use Firebase's signOut method to log out the user
             .then(() => {
                 // If sign out is successful, navigate to the login page
-                navigate("/admin");  // Redirect to the login page ("/admin")
+                navigate("/admin/login");  // Redirect to the login page ("/admin")
             })
             .catch((error) => {
                 // Handle any errors during sign out
