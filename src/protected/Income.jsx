@@ -7,7 +7,7 @@ const Income = () => {
   const [incomeList, setIncomeList] = useState([]);
   const [filteredIncomeList, setFilteredIncomeList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(5); // Set items per page
+  const [itemsPerPage] = useState(50); // Set items per page
   const [loading, setLoading] = useState(true);
   const [filterMonth, setFilterMonth] = useState(""); // Selected filter month
 

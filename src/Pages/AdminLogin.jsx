@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faKey, faUser, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faKey, faUser, faEye, faEyeSlash, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth"; // Import this function
 import { useNavigate } from "react-router-dom"; // To redirect after login
@@ -94,17 +94,12 @@ const AdminLogin = () => {
             disabled={loading} // Disable button while loading
           >
             {loading ? (
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-6 h-6 animate-spin">
-                <circle fill="white" stroke="white" strokeWidth="15" r="15" cx="40" cy="65">
-                  <animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.4" />
-                </circle>
-                <circle fill="white" stroke="white" strokeWidth="15" r="15" cx="100" cy="65">
-                  <animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="-.2" />
-                </circle>
-                <circle fill="white" stroke="white" strokeWidth="15" r="15" cx="160" cy="65">
-                  <animate attributeName="cy" calcMode="spline" dur="2" values="65;135;65;" keySplines=".5 0 .5 1;.5 0 .5 1" repeatCount="indefinite" begin="0" />
-                </circle>
-              </svg>
+              <div className="flex items-center justify-center">
+                              <FontAwesomeIcon
+                                icon={faSpinner}
+                                className="animate-spin text-4xl text-white"
+                              />
+                            </div>
             ) : (
               "Login"
             )}

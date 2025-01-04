@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/PageTitle";
+
+import Alert from "../components/Alert";
 import { serverTimestamp } from "firebase/firestore";
 import {
     collection, getDocs, getDoc, doc,
@@ -9,13 +11,16 @@ import {
 import { db } from "../Firebase";
 import Loading from "../components/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 export default function DuesStudent() {
     const [student, setStudent] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [duesClearLoading, setDuesClearLoading] = useState(false);
+    const [waiveLoading, setWaiveLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(5);
+    const [itemsPerPage] = useState(50);
+    const [alert, setAlert] = useState(null);
 
     // Fetch students from Firebase
     useEffect(() => {
@@ -41,14 +46,14 @@ export default function DuesStudent() {
 
     // Handle clearing dues
     const clearDues = async (id) => {
+        setDuesClearLoading(true)
         const studentDocRef = doc(db, "students", id);
         const studentDoc = await getDoc(studentDocRef);
-
         if (!studentDoc.exists()) {
             console.error("Student not found");
+            setDuesClearLoading(false)
             return;
         }
-
         const studentData = studentDoc.data();
         try {
             const updatedStudentData = {
@@ -69,13 +74,46 @@ export default function DuesStudent() {
 
             await addDoc(collection(db, "income"), incomeData);
 
-            alert("Dues cleared and income data added successfully!");
-
+            setAlert({ type: "success", message: "Dues paid and Clear" })
             const updatedStudents = student.filter((item) => item.id !== id);
             setStudent(updatedStudents);
+            setDuesClearLoading(false)
         } catch (error) {
             console.error("Error clearing dues:", error);
+            setAlert({ type: "error", message: "Error in  dues clearance" })
+            setDuesClearLoading(false)
         }
+        setDuesClearLoading(false)
+    };
+    const closeAlert = () => {
+        setAlert(null);
+    };
+    const waiveDues = async (id) => {
+        setWaiveLoading(true)
+        const studentDocRef = doc(db, "students", id);
+        const studentDoc = await getDoc(studentDocRef);
+        if (!studentDoc.exists()) {
+            console.error("Student not found");
+            setDuesClearLoading(false)
+            return;
+        }
+        const studentData = studentDoc.data();
+        try {
+            const updatedStudentData = {
+                ...studentData,
+                payment: { ...studentData.payment, dues: 0 },
+            };
+            await updateDoc(studentDocRef, updatedStudentData);
+            setAlert({ type: "success", message: "Dues waived Off" })
+            const updatedStudents = student.filter((item) => item.id !== id);
+            setStudent(updatedStudents);
+            setWaiveLoading(false)
+        } catch (error) {
+            console.error("Error clearing dues:", error);
+            setAlert({ type: "error", message: "Error in  waive off" })
+            setWaiveLoading(false)
+        }
+        setWaiveLoading(false)
     };
 
     // Handle reminder
@@ -97,6 +135,12 @@ export default function DuesStudent() {
     return (
         <div className="p-6 bg-gray-100 min-h-full">
             <PageTitle title="Dues Students" />
+            {/* Alert Box */}
+            {alert && <Alert
+                type={alert.type}
+                message={alert.message}
+                onClose={closeAlert}
+            />}
             <h1 className="text-2xl font-bold text-gray-700 mb-4">Dues Students</h1>
 
             {/* Table */}
@@ -104,13 +148,13 @@ export default function DuesStudent() {
                 <table className="w-full table-auto border-collapse bg-white shadow-md rounded-lg">
                     <thead>
                         <tr className="bg-red-500 text-white">
-                            <th className="px-4 py-2">S. No.</th>
-                            <th className="px-4 py-2">Name</th>
-                            <th className="px-4 py-2">Dues Shift</th>
-                            <th className="px-4 py-2">Paid Amount</th>
-                            <th className="px-4 py-2">Due Amount</th>
-                            <th className="px-4 py-2">Action</th>
-                            <th className="px-4 py-2">Reminder</th>
+                            <th className="text-left px-4 py-2">S. No.</th>
+                            <th className="text-left px-4 py-2">Name</th>
+                            <th className="text-left px-4 py-2">Dues Shift</th>
+                            <th className="text-left px-4 py-2">Paid Amount</th>
+                            <th className="text-left px-4 py-2">Due Amount</th>
+                            <th className="text-left px-4 py-2">Action</th>
+                            <th className="text-left px-4 py-2">Reminder</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -144,10 +188,37 @@ export default function DuesStudent() {
                                     <td className="px-4 py-2">{each.payment.dues}</td>
                                     <td className="px-4 py-2">
                                         <button
+                                            disabled={duesClearLoading}
                                             onClick={() => clearDues(each.id)}
-                                            className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-green-700"
+                                            className="bg-green-500 text-white  px-3 py-1 rounded-md hover:bg-green-700"
                                         >
-                                            Clear
+                                            {duesClearLoading ? (
+                                                <div className="flex items-center justify-center">
+                                                    <FontAwesomeIcon
+                                                        icon={faSpinner}
+                                                        className="animate-spin  text-white"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                "Clear"
+                                            )}
+
+                                        </button>
+                                        <button className="my-2 md:mx-2 bg-pink-500 text-white  px-3 py-1 rounded-md hover:bg-pink-700"
+                                            disabled={waiveLoading}
+                                            onClick={() => waiveDues(each.id)}
+                                        >
+                                            {waiveLoading ? (
+                                                <div className="flex items-center justify-center">
+                                                    <FontAwesomeIcon
+                                                        icon={faSpinner}
+                                                        className="animate-spin  text-white"
+                                                    />
+                                                </div>
+                                            ) : (
+                                                "Waive Off"
+                                            )}
+
                                         </button>
                                     </td>
                                     <td className="px-4 py-2">

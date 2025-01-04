@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../Firebase";
 import Alert from "../components/Alert";
 
@@ -62,6 +62,19 @@ const AddExpense = () => {
         // Add expense to Firestore
         try {
             await addDoc(collection(db, "expenses"), expenseData);
+
+            const transactionRef = collection(db, "transactions");
+
+            await Promise.all([
+
+                addDoc(transactionRef, {
+                    name: expenseData.title,
+                    timestamp: serverTimestamp(),
+                    amount: -Number(expenseData.amount),
+                    message: `Paid amount ${expenseData.amount}  for  ${expenseData.category}`,
+                    type: "loss"
+                }),
+            ]);
 
             setAlert({ type: "success", message: "Expense added successfully!" });
 

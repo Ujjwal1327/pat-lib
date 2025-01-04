@@ -60,11 +60,7 @@ function StudentDetails() {
             <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
             <span>Back</span>
           </button>
-          <img
-                src={student.documents.aadhaar}
-                alt="Student Profile"
-                className="w-full h-40 object-cover  border-indigo-500 shadow-lg"
-              />
+         
           {/* Profile Image */}
           {student.documents.photo && (
             <div className="flex justify-center mb-8 flex-col gap-3 items-center">

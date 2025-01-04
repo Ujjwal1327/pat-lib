@@ -24,7 +24,7 @@ const AdminLayout = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col h-full overflow-y-auto ml-0 md:ml-0">
+        <div className="flex-1 flex flex-col h-full overflow-y-auto ml-0 md:ml-0" onClick={()=> setSidebarVisible(false)} >
           <div className="flex-1">
             <Outlet />
           </div>

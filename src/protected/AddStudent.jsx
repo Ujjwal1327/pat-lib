@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { storage, db } from "../Firebase"; // Import Firebase config
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { serverTimestamp } from "firebase/firestore"; // Import serverTimestamp
+import { query, serverTimestamp, where } from "firebase/firestore"; // Import serverTimestamp
 import Alert from "../components/Alert";
 import { collection, addDoc, getDocs } from "firebase/firestore";
 import PageTitle from "../components/PageTitle";
@@ -69,19 +69,15 @@ const AddStudent = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
-    // Validate photo and form data
-    if (!files.photo) {
-      setAlert({ type: "error", message: "Photo is required for submission." });
+    // Validate form inputs
+    const error = validateForm()
+    if (error) {
+      setAlert({ type: "error", message: error });
       setLoading(false);
-      return;
-    }
-
-    if (!studentData.name || studentData.shifts.length === 0 || !studentData.payment.amount) {
-      setAlert({ type: "error", message: "Please fill out all required fields." });
-      setLoading(false);
+      setTimeout(() => setAlert(null), 2500);
       return;
     }
 
@@ -91,13 +87,34 @@ const AddStudent = () => {
     }));
 
     try {
+      // Check if the student is already registered using the mobile number
+      const studentRef = collection(db, "students");
+      const querySnapshot = await getDocs(
+        query(studentRef, where("mobile", "==", studentData.mobile))
+      );
+
+      if (!querySnapshot.empty) {
+        const registeredStudent = querySnapshot.docs[0].data(); // Get the first matching document
+        const registrationNumber = registeredStudent.registrationNumber;
+
+        setAlert({
+          type: "error",
+          message: `A student with this mobile number is already registered. Registration Number: ${registrationNumber}`,
+        });
+        setLoading(false);
+        return;
+      }
+
       // Upload photo and add data to Firestore
       const photoUrl = await uploadFileToStorage(files.photo, "photos");
       const studentId = `STU${Date.now()}`;
+    
+
       const finalData = {
         studentId,
         registrationNumber,
-        ...studentData,
+        ...studentData, // Spread the remaining properties of studentData
+        name: studentData.name.toLowerCase(),  // Convert the name to lowercase here
         documents: { photo: photoUrl },
         history: [
           {
@@ -107,9 +124,10 @@ const AddStudent = () => {
         ],
         runningShiftStatus,
       };
+      
 
-      const studentRef = collection(db, "students");
       const incomeRef = collection(db, "income");
+      const transactionRef = collection(db, "transactions");
 
       await Promise.all([
         addDoc(studentRef, finalData),
@@ -121,17 +139,30 @@ const AddStudent = () => {
           message: `New Admission for ${studentData.shifts.join(", ")}`,
           timestamp: serverTimestamp(),
         }),
+        addDoc(transactionRef, {
+          name: studentData.name,
+          timestamp: serverTimestamp(),
+          amount: Number(studentData.payment.amount),
+          message: `Received amount ${studentData.payment.amount} for new admission of ${studentData.name}`,
+          type: "profit",
+        }),
       ]);
 
+      fetchStudentCount();
       setAlert({ type: "success", message: "Data added successfully!" });
       resetForm(e);
     } catch (error) {
       console.error("Error during submission:", error);
-      setAlert({ type: "error", message: "Failed to submit data. Please try again." });
+      setAlert({
+        type: "error",
+        message: "Failed to submit data. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
   };
+
+
 
   const resetForm = (e) => {
     setStudentData({
@@ -156,6 +187,7 @@ const AddStudent = () => {
     const errors = {};
 
     if (!studentData.name) return "Student name is required.";
+    if (!studentData.mobile) return "Mobile number is required.";
     if (!/^\d{10}$/.test(studentData.mobile)) return "Mobile number must be 10 digits.";
     if (!studentData.address) return 'Please enter Address';
     if (!studentData.seatNo) return 'Please enter seat Number or either 0';
@@ -175,7 +207,7 @@ const AddStudent = () => {
     if (!studentData.payment.dateOfPayment) return "Payment date is required.";
     if (!studentData.dateOfJoining) return "Date Of Joining is required.";
     if (!studentData.payment.eligibleTill) return "Eligible till date is required.";
-    if (new Date(studentData.payment.eligibleTill) < new Date(studentData.payment.dateOfPayment)) {
+    if (new Date(studentData.payment.eligibleTill) <= new Date(studentData.payment.dateOfPayment)) {
       return "Eligible till date must be after the payment date.";
     }
     if (!files.photo) return "Photo is required.";
@@ -319,7 +351,6 @@ const AddStudent = () => {
             </div>
           ))}
         </div>
-
         <select
           name="payment.mode"
           value={studentData.payment.mode}
