@@ -6,7 +6,7 @@ export const fetchLatestStudents = async () => {
         // Query students, ordered by enrollment date in descending order and limit to 5
         const q = query(
             collection(db, "students"),
-            orderBy("dateOfJoining", "desc"), // Replace "enrollmentDate" with the correct field name
+            orderBy('registrationNumber', 'desc'), // Replace "enrollmentDate" with the correct field name
             limit(5)
         );
 

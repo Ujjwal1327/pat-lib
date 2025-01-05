@@ -128,6 +128,18 @@ const Left = () => {
 
             // Update the student document in Firebase
             await updateDoc(studentDocRef, updatedStudentData);
+            // Adding code of transactions
+            const transactionRef = collection(db, "transactions");
+
+            const transactionData = {
+                name: studentData.name,
+                timestamp: serverTimestamp(),
+                registrationNumber: studentData.registrationNumber,
+                amount: Number(renewData.amount),
+                message: `Recieved amount Rs ${renewData.amount} for renewing from ${studentData.name} after left.`,
+                type: "profit",
+            };
+            await addDoc(transactionRef, transactionData);
 
             console.log("Student data updated successfully");
             setIsModalOpen(false); // Close the modal after submitting
@@ -210,10 +222,9 @@ const Left = () => {
                     const eligibleTillDate = new Date(item.payment.eligibleTill);
                     const diffTime = new Date() - eligibleTillDate; // Difference in milliseconds
                     const diffDays = diffTime / (1000 * 3600 * 24); // Convert milliseconds to days
-                    console.log(diffDays)
                     return diffDays > 10; // Only include students where the difference is more than 15 days
                 });
-
+                console.log(leftStudent)
                 setStudent(leftStudent); // Update the state with filtered students
             } catch (error) {
                 console.error("Error fetching student data:", error); // Log any errors
@@ -250,6 +261,7 @@ const Left = () => {
                     <thead>
                         <tr className="bg-red-500 text-white">
                             <th className="px-4 py-2 text-left">S. No.</th>
+                            <th className="px-4 py-2 text-left">R. No.</th>
                             <th className="px-4 py-2 text-left">Name</th>
                             <th className="px-4 py-2 text-left">Mobile</th>
                             <th className="px-4 py-2 text-left">Last Enrolled Shift</th>
@@ -259,15 +271,12 @@ const Left = () => {
                     </thead>
                     <tbody>
                         {loading ? (
-                            <tr>
-                                <td colSpan="5" className="text-center px-4 py-6">
-                                    <Loading /> {/* Show loading spinner */}
-                                </td>
-                            </tr>
+                            <Loading />
                         ) : student.length > 0 ? (
                             student.map((each, index) => (
                                 <tr key={each.id} className="border-b hover:bg-gray-100">
                                     <td className="px-4 py-2">{index + 1}</td>
+                                    <td className="px-4 py-2 capitalize">{each.registrationNumber}</td>
                                     <td className="px-4 py-2 capitalize">{each.name}</td>
                                     <td className="px-4 py-2">{each.mobile}</td>
                                     <td className="px-4 py-2">

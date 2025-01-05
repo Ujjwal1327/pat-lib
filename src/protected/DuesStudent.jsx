@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PageTitle from "../components/PageTitle";
 
 import Alert from "../components/Alert";
-import { serverTimestamp } from "firebase/firestore";
+import { orderBy, query, serverTimestamp } from "firebase/firestore";
 import {
     collection, getDocs, getDoc, doc,
     updateDoc,
@@ -27,7 +27,8 @@ export default function DuesStudent() {
         const fetchStudents = async () => {
             try {
                 setLoading(true);
-                const querySnapshot = await getDocs(collection(db, "students"));
+                 const q = query(collection(db, 'students'), orderBy('registrationNumber', 'desc'));
+                const querySnapshot = await getDocs(q);
                 const allStudents = querySnapshot.docs.map((doc) => ({
                     id: doc.id,
                     ...doc.data(),
@@ -73,6 +74,18 @@ export default function DuesStudent() {
             };
 
             await addDoc(collection(db, "income"), incomeData);
+            // Adding code of transactions
+            const transactionRef = collection(db, "transactions");
+
+            const transactionData = {
+                name: studentData.name,
+                timestamp: serverTimestamp(),
+                registrationNumber: studentData.registrationNumber,
+                amount: Number(studentData.payment.dues),
+                message: `recieved Dues clear ${studentData.payment.dues} for re admission of ${studentData.name}`,
+                type: "profit",
+            };
+            await addDoc(transactionRef, transactionData);
 
             setAlert({ type: "success", message: "Dues paid and Clear" })
             const updatedStudents = student.filter((item) => item.id !== id);
@@ -104,15 +117,31 @@ export default function DuesStudent() {
                 payment: { ...studentData.payment, dues: 0 },
             };
             await updateDoc(studentDocRef, updatedStudentData);
-            setAlert({ type: "success", message: "Dues waived Off" })
+            setAlert({ type: "success", message: "Dues waived Off" });
+
             const updatedStudents = student.filter((item) => item.id !== id);
+
+            // Adding code of transactions
+            const transactionRef = collection(db, "transactions");
+
+            const transactionData = {
+                name: studentData.name,
+                timestamp: serverTimestamp(),
+                registrationNumber: studentData.registrationNumber,
+                amount: Number(studentData.payment.dues),
+                message: `Waive amount ${studentData.payment.dues} for re admission of ${studentData.name}`,
+                type: "profit",
+            };
+            await addDoc(transactionRef, transactionData);
+
             setStudent(updatedStudents);
-            setWaiveLoading(false)
+            setWaiveLoading(false);
         } catch (error) {
             console.error("Error clearing dues:", error);
-            setAlert({ type: "error", message: "Error in  waive off" })
-            setWaiveLoading(false)
+            setAlert({ type: "error", message: "Error in waive off" });
+            setWaiveLoading(false);
         }
+
         setWaiveLoading(false)
     };
 
@@ -149,6 +178,7 @@ export default function DuesStudent() {
                     <thead>
                         <tr className="bg-red-500 text-white">
                             <th className="text-left px-4 py-2">S. No.</th>
+                            <th className="text-left px-4 py-2">R. No.</th>
                             <th className="text-left px-4 py-2">Name</th>
                             <th className="text-left px-4 py-2">Dues Shift</th>
                             <th className="text-left px-4 py-2">Paid Amount</th>
@@ -182,6 +212,7 @@ export default function DuesStudent() {
                             currentItems.map((each, index) => (
                                 <tr key={each.id} className="border-b hover:bg-gray-100">
                                     <td className="px-4 py-2">{indexOfFirstItem + index + 1}</td>
+                                    <td className="px-4 py-2 capitalize">{each.registrationNumber}</td>
                                     <td className="px-4 py-2 capitalize">{each.name}</td>
                                     <td className="px-4 py-2 capitalize">{each.shifts.join(", ")}</td>
                                     <td className="px-4 py-2">{Number(each.payment.amount)}</td>

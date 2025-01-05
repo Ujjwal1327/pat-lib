@@ -20,6 +20,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      
       const visitorCount = await fetchTodayVisitorsCount();
       setTodayVisitors(visitorCount);
       const dues = await fetchTotalDues();
@@ -48,7 +49,6 @@ const AdminDashboard = () => {
           bgColor="bg-gradient-to-r from-blue-100 to-blue-50"
           textColor="text-blue-700"
         />
-
         <CardComponent
           title="Total Dues"
           amount={loading ? "Loading..." : totalDues}

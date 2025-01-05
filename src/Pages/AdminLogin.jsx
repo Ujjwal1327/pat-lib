@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faKey, faUser, faEye, faEyeSlash, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth"; // Import this function
-import { useNavigate } from "react-router-dom"; // To redirect after login
+import { Link, useNavigate } from "react-router-dom"; // To redirect after login
 import { auth } from "../Firebase"; // Import the auth object
 
 const AdminLogin = () => {
@@ -45,9 +45,26 @@ const AdminLogin = () => {
       <div className='flex flex-col md:flex-row items-stretch min-h-[80vh] justify-center w-[90%] md:w-[80%] lg:w-[60%] shadow-2xl'>
         <div id='left' className="flex-1 rounded-s-2xl bg-gradient-to-r from-blue-700 to-blue-500 flex items-center justify-center flex-col gap-5">
           <div className='w-[80%] '>
-            <h1 className="text-white mb-8  relative text-3xl font-bold after:content-[''] after:block after:w-[30%] after:h-[2px] after:bg-white after:mt-2 after:mx-auto after:absolute after:left-0">
+            <h1 className="text-white mb-8 relative text-xl sm:text-3xl font-bold after:content-[''] after:block after:w-[100%] sm:after:w-[40%] after:h-[2px] after:bg-white after:mt-2 after:mx-auto after:absolute after:left-0">
+              
+              <span className="hidden sm:block">
               Welcome to Patna Library Admin Login
+              </span>
+              <span className="block sm:hidden text-center">
+               Admin Login
+              </span>
             </h1>
+            <Link
+                    to="/"
+                    className="mt-6 inline-block  py-1 px-3 bg-blue-600 text-white text-base sm:text-lg font-medium rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transition-all duration-300"
+                >
+                   <span className="hidden sm:block">
+                   Go Back to Homepage
+                   </span>
+                   <span className="block sm:hidden">
+                   Home
+                   </span>
+                </Link>
           </div>
         </div>
 

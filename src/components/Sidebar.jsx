@@ -220,6 +220,20 @@ const Sidebar = ({ onMenuClick }) => {
             Inquiries
           </NavLink>
         </li>
+        {/* Inquiries */}
+        <li>
+          <NavLink
+            to="transactions"
+            className={({ isActive }) =>
+              isActive
+                ? "block px-4 py-2 bg-pink-700 text-white rounded shadow"
+                : "block px-4 py-2 bg-pink-500 text-white hover:bg-pink-600 rounded"
+            }
+            onClick={onMenuClick}
+          >
+            Transactions
+          </NavLink>
+        </li>
   
         {/* Empty */}
         <li className="min-h-28"></li>

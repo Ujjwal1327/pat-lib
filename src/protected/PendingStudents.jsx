@@ -12,12 +12,7 @@ import { db } from "../Firebase";
 import Loading from "../components/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons"; // for cross icon
-
 import { serverTimestamp } from "firebase/firestore"; // Import serverTimestamp
-
-
-
-
 
 const PendingStudents = () => {
     const [student, setStudent] = useState([]); // Holds student data
@@ -126,7 +121,17 @@ const PendingStudents = () => {
 
             // Update the student document in Firebase
             await updateDoc(studentDocRef, updatedStudentData);
+            const transactionRef = collection(db, "transactions");
 
+            const transactionData = {
+                name: studentData.name,
+                timestamp: serverTimestamp(),
+                registrationNumber: studentData.registrationNumber,
+                amount: Number(renewData.amount),
+                message: `Recieved amount Rs ${renewData.amount} for renewing from ${studentData.name} in  ${renewData.shift.join(" ")} shift`,
+                type: "profit",
+            };
+            await addDoc(transactionRef, transactionData);
             console.log("Student data updated successfully");
             setIsModalOpen(false); // Close the modal after submitting
         } catch (error) {
@@ -139,7 +144,7 @@ const PendingStudents = () => {
             const incomeData = {
                 name: studentData.name, // Student's name
                 date: new Date().toISOString(), // Current date (ISO string format)
-                amountPaid: studentData.payment.amount, // Amount paid
+                amountPaid: renewData.amount, // Amount paid
                 mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
                 message: `Renew in ${studentData.shifts.join(", ")}`, // Custom message
                 timestamp: serverTimestamp(), // Add server-side timestamp for ordering
@@ -237,6 +242,7 @@ const PendingStudents = () => {
                     <thead>
                         <tr className="bg-yellow-500 text-white">
                             <th className="px-4 py-2 text-left">S. No.</th>
+                            <th className="px-4 py-2 text-left">R. No.</th>
                             <th className="px-4 py-2 text-left">Name</th>
                             <th className="px-4 py-2 text-left">Mobile</th>
                             <th className="px-4 py-2 text-left">Pending State</th>
@@ -251,6 +257,7 @@ const PendingStudents = () => {
                             student.map((each, index) => (
                                 <tr key={each.id} className="border-b hover:bg-gray-100">
                                     <td className="px-4 py-2">{index + 1}</td>
+                                    <td className="px-4 py-3 capitalize font-bold text-xl text-gray-700">{each.registrationNumber}</td>
                                     <td className="px-4 py-3 capitalize font-bold text-xl text-gray-700">{each.name}</td>
                                     <td className="px-4 py-2">{each.mobile}</td>
                                     <td className="px-4 py-2">
@@ -258,14 +265,14 @@ const PendingStudents = () => {
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
-                                            .map((item ,index) => <span className="inline-block px-2 py-1 bg-blue-100 text-blue-600 rounded-lg m-1" key={item.id}> {item.shiftName} </span>)}
+                                            .map((item, index) => <span className="inline-block px-2 py-1 bg-blue-100 text-blue-600 rounded-lg m-1" key={item.id}> {item.shiftName} </span>)}
                                     </td>
-                                    <td className="px-4 py-1 inline-block  rounded-lg m-4 bg-red-100 text-red-600">
+                                    <td className="px-4 py-1 inline-block rounded-lg m-4">
                                         {each.runningShiftStatus
                                             .filter(
                                                 (item) => new Date() > new Date(item.eligibleTill)
                                             )
-                                            .map((item) => item.eligibleTill)}
+                                            .map((item) => <span className="inline-block px-2 py-1 bg-red-100 text-red-600 rounded-lg m-1" key={item.id}> {item.eligibleTill} </span>)}
                                     </td>
                                     <td className="px-4 py-2">
                                         <button

@@ -45,7 +45,7 @@ export default function Header() {
                         </NavLink>
                     </li>
 
-                    <li>
+                    {/*<li>
                         <NavLink
                             to="/blog"
                             className={({ isActive }) =>
@@ -56,7 +56,7 @@ export default function Header() {
                         >
                             Blog
                         </NavLink>
-                    </li>
+                    </li> */}
 
                     <li>
                         <NavLink
@@ -73,9 +73,7 @@ export default function Header() {
 
                 </ul>
                 <Link to='/admin' className="hidden  border-2 rounded-lg border-gray-500 px-4 py-2 md:flex gap-1 justify-between items-center">
-                <FontAwesomeIcon icon={faAtom} />
-                    <span >Student Login</span>
-                    <FontAwesomeIcon icon={faArrowRight} />
+                    <span className="text-2xl" >🔐 Admin Login</span>
                 </Link>
                 <button className="block md:hidden">
 
@@ -110,7 +108,7 @@ export default function Header() {
                     <Link to='/admin'
                         className="mx-12 my-6 flex border-2 rounded-lg border-gray-500 px-4 py-2 md:hidden gap-1 justify-between items-center">
 
-                        <span onClick={toggleMenu} className="text-center mx-auto">Student Login</span>
+                        <span onClick={toggleMenu} className="text-center mx-auto"> <span className="text-2xl" >🔐 Admin Login</span></span>
                     </Link>
                 </div>
             </nav>

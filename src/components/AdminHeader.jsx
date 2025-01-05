@@ -122,7 +122,8 @@ const AdminHeader = ({ onMenuClick }) => {
                             </div>
                         ))}
                     </div>
-                )}
+                ) 
+            }
             </div>
 
             {/* Logout Button */}

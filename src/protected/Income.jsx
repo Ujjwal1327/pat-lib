@@ -169,7 +169,7 @@ const Income = () => {
                     className="odd:bg-gray-100 even:bg-gray-50 hover:bg-gray-200"
                   >
                     <td className="px-4 py-2 border">{indexOfFirstItem + index + 1}</td>
-                    <td className="px-4 py-2 border">{income.name || "N/A"}</td>
+                    <td className="px-4 py-2 border capitalize">{income.name || "N/A"}</td>
                     <td className="px-4 py-2 border">
                       {income.timestamp
                         ? new Date(income.timestamp.toDate()).toLocaleDateString("en-IN", {

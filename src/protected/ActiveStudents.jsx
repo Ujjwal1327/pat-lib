@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PageTitle from "../components/PageTitle";
+import Alert from "../components/Alert";
 import {
     collection,
     doc,
@@ -8,6 +9,8 @@ import {
     updateDoc,
     addDoc,
     serverTimestamp,
+    query,
+    orderBy,
 } from "firebase/firestore";
 import { db } from "../Firebase";
 import { Link } from "react-router-dom";
@@ -128,9 +131,13 @@ const ActiveStudents = () => {
             // Update the student document in Firebase
             await updateDoc(studentDocRef, updatedStudentData);
 
+
+
+
+
             console.log("Student data updated successfully");
             setIsModalOpen(false); // Close the modal after submitting
-            setAlert({ type: "error", message: "data has been added." });
+            setAlert({ type: "success", message: "data has been added." });
         } catch (error) {
             setAlert({ type: "error", message: "Error in updating student data." });
             console.error("Error updating student data:", error);
@@ -141,7 +148,7 @@ const ActiveStudents = () => {
             const incomeData = {
                 name: studentData.name, // Student's name
                 date: new Date().toISOString(), // Current date (ISO string format)
-                amountPaid: studentData.payment.amount, // Amount paid
+                amountPaid: renewData.amount, // Amount paid
                 mobile: studentData.mobile || "N/A", // Mobile number (add a fallback if undefined)
                 message: `Upgrade in  ${studentData.shifts.join(", ")} shift`, // Custom message
                 timestamp: serverTimestamp(), // Add server-side timestamp for ordering
@@ -150,7 +157,19 @@ const ActiveStudents = () => {
             const incomeRef = collection(db, "income"); // Firestore collection for income
             await addDoc(incomeRef, incomeData);
 
-            alert("Income data added successfully!");
+            // Adding code of transactions
+            const transactionRef = collection(db, "transactions");
+
+            const transactionData = {
+                name: studentData.name,
+                timestamp: serverTimestamp(),
+                registrationNumber: studentData.registrationNumber,
+                amount: Number(renewData.amount),
+                message: `Recieved amount Rs ${renewData.amount} for upgrading from ${studentData.name}`,
+                type: "profit",
+            };
+            await addDoc(transactionRef, transactionData);
+            setAlert({ type: "success", message: "Income data added successfully!" }); 
         } catch (error) {
             console.error("Error adding income data:", error);
             setAlert({ type: "error", message: "Error in saving income data." });
@@ -195,7 +214,8 @@ const ActiveStudents = () => {
         const fetchEnq = async () => {
             try {
                 setLoading(true); // Start loading
-                const querySnapshot = await getDocs(collection(db, "students"));
+                 const q = query(collection(db, 'students'), orderBy('registrationNumber', 'desc'));
+                const querySnapshot = await getDocs(q);
                 const allStudents = querySnapshot.docs.map((doc) => ({
                     id: doc.id, // Use the document ID
                     ...doc.data(),
@@ -216,7 +236,9 @@ const ActiveStudents = () => {
 
         fetchEnq();
     }, []);
-
+    const closeAlert = () => {
+        setAlert(null);
+    };
     console.log(student)
     return (
         <div className="p-6 bg-gray-50 min-h-full">
@@ -233,6 +255,7 @@ const ActiveStudents = () => {
                     <thead>
                         <tr className="bg-blue-600 text-white text-lg">
                             <th className="px-4 py-3 text-left">S. No.</th>
+                            <th className="px-4 py-3 text-left">R. No.</th>
                             <th className="px-4 py-3 text-left">Name</th>
                             <th className="px-4 py-3 text-left">Mobile</th>
                             <th className="px-4 py-3 text-left">Active Shift</th>
@@ -253,6 +276,9 @@ const ActiveStudents = () => {
                                 >
                                     <td className="px-4 py-3 font-medium text-gray-800">
                                         {index + 1}
+                                    </td>
+                                    <td className="px-4 py-3 capitalize font-bold text-xl text-gray-700">
+                                        {each.registrationNumber}
                                     </td>
                                     <td className="px-4 py-3 capitalize font-bold text-xl text-gray-700">
                                         {each.name}

@@ -7,10 +7,10 @@ const StudentTableComponent = ({ students, loading }) => {
       <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
         <thead className="bg-blue-600 text-white">
           <tr>
+            <th className="px-4 py-3 text-left font-semibold">R. No.</th>
             <th className="px-4 py-3 text-left font-semibold">Name</th>
             <th className="px-4 py-3 text-left font-semibold">Amount</th>
             <th className="px-4 py-3 text-left font-semibold">Mode</th>
-            <th className="px-4 py-3 text-left font-semibold">Shift</th>
             <th className="px-4 py-3 text-left font-semibold">Dues</th>
           </tr>
         </thead>
@@ -40,10 +40,10 @@ const StudentTableComponent = ({ students, loading }) => {
             // Actual Table Data
             students.map((item) => (
               <tr key={item.id} className="border-b hover:bg-gray-100 transition duration-200">
+                <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.registrationNumber}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.name}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.payment.amount}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.payment.mode}</td>
-                <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.shifts}</td>
                 <td className="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">{item.payment.dues}</td>
               </tr>
             ))

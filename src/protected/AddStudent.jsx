@@ -133,6 +133,7 @@ const AddStudent = () => {
         addDoc(studentRef, finalData),
         addDoc(incomeRef, {
           name: studentData.name,
+          registrationNumber,
           date: new Date().toISOString(),
           amountPaid: studentData.payment.amount,
           mobile: studentData.mobile || "N/A",
@@ -359,8 +360,10 @@ const AddStudent = () => {
         >
           <option value="">Select Payment Mode</option>
           <option value="Cash">Cash</option>
-          <option value="Card">Card</option>
-          <option value="UPI">UPI</option>
+          <option value="Paytm">Paytm</option>
+          <option value="PhonePe">PhonePe</option>
+          <option value="GPay">GPay</option>
+          <option value="Online-Others">Online-Others</option>
         </select>
         <input
           type="number"

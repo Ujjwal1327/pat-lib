@@ -23,6 +23,7 @@ import Left from './protected/Left.jsx';
 import PendingStudents from './protected/PendingStudents.jsx';
 import Income from './protected/Income.jsx';
 import DuesStudent from './protected/DuesStudent.jsx';
+import Transactions from './protected/Transactions.jsx';
 export const routes = [
     {
         path: "/", // Public layout for home and static pages
@@ -66,8 +67,7 @@ export const routes = [
             { path: "seat", element: <Seat /> }, // Relative path
             { path: "shift", element: <ManageShifts /> }, // Relative path
             { path: "enquiries", element: <Enquiries /> }, // Relative path
-
-
+            { path: "transactions", element: <Transactions /> }, // Relative path
         ],
     },
 ];

@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Add useNavigate hook
 import { db } from "../Firebase";
-import { doc, getDoc } from "firebase/firestore";
-import { faPhone, faUser, faArrowLeft, faCalendarAlt, faMoneyBillAlt, faEnvelope, faLocation } from "@fortawesome/free-solid-svg-icons";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  faPhone,
+  faUser,
+  faArrowLeft,
+  faCalendarAlt,
+  faMoneyBillAlt,
+  faEnvelope,
+  faLocation,
+  faEdit,
+  faSave,
+  faCancel,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Loading from "../components/Loading";
 
@@ -11,6 +22,8 @@ function StudentDetails() {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [editAadhaar, setEditAadhaar] = useState(false);
+  const [aadhaar, setAadhaar] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
@@ -21,6 +34,7 @@ function StudentDetails() {
 
         if (docSnap.exists()) {
           setStudent(docSnap.data());
+          setAadhaar(docSnap.data().aadhaar || ""); // Initialize Aadhaar if present
         } else {
           setError("Student not found.");
         }
@@ -35,6 +49,17 @@ function StudentDetails() {
     fetchStudent();
   }, [id]); // Re-fetch data if the id changes
 
+  const handleUpdateAadhaar = async () => {
+    try {
+      const docRef = doc(db, "students", id);
+      await updateDoc(docRef, { aadhaar });
+      setStudent((prevStudent) => ({ ...prevStudent, aadhaar }));
+      setEditAadhaar(false);
+    } catch (err) {
+      console.error("Failed to update Aadhaar number:", err);
+    }
+  };
+
   if (loading) {
     return <div className="text-center text-xl font-semibold text-indigo-600">Loading...</div>;
   }
@@ -47,20 +72,17 @@ function StudentDetails() {
     <div className="p-6 bg-gradient-to-r from-indigo-50 to-white min-h-screen">
       <h1 className="text-4xl font-bold text-center text-indigo-700 mb-8">Student Details</h1>
 
-      {/* Back Button */}
-
-
       {student && (
-
         <div className="bg-white shadow-2xl rounded-lg p-8 max-w-4xl mx-auto space-y-8">
+          {/* Back Button */}
           <button
             onClick={() => navigate(-1)} // Go back to the previous page
-            className="text-md  rounded-sm px-3 py-1 bg-blue-600 text-white hover:bg-indigo-500 hover:drop-shadow-lg mb-6 flex items-center space-x-2"
+            className="text-md rounded-sm px-3 py-1 bg-blue-600 text-white hover:bg-indigo-500 hover:drop-shadow-lg mb-6 flex items-center space-x-2"
           >
             <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
             <span>Back</span>
           </button>
-         
+
           {/* Profile Image */}
           {student.documents.photo && (
             <div className="flex justify-center mb-8 flex-col gap-3 items-center">
@@ -72,29 +94,70 @@ function StudentDetails() {
               <h2 className="text-2xl font-semibold text-indigo-600 flex items-center space-x-2">
                 <span>{student.name}</span>
               </h2>
+
+              {/* Aadhaar Section */}
+              <div className="flex items-center space-x-4">
+                {editAadhaar ? (
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={aadhaar}
+                      onChange={(e) => setAadhaar(e.target.value)}
+                      className="border border-gray-300 rounded px-2 py-1"
+                      placeholder="Enter Aadhaar Number"
+                    />
+                    <button
+                      onClick={handleUpdateAadhaar}
+                      className="bg-purple-300 text-white px-6 py-1 rounded hover:bg-purple-400 "
+                    >
+                     ✔️
+                    </button>
+                    <button
+                      onClick={() => setEditAadhaar(false)}
+                      className="bg-red-200 text-white px-6 py-1 rounded hover:bg-red-300"
+                    >
+                    ❌
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <span className="text-lg text-gray-700">
+                      <strong>Aadhaar:</strong>{" "}
+                      {aadhaar ? aadhaar : <span className="text-red-500">Not Provided</span>}
+                    </span>
+                    <button
+                      onClick={() => setEditAadhaar(true)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                    ✏️
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {/* Basic Information */}
           <div className="space-y-4">
-
             <p className="text-lg text-gray-700">
               <strong>Father's Name:</strong> {student.fatherName}
             </p>
             <p className="text-lg text-gray-700">
-              <strong>Mobile:</strong> <FontAwesomeIcon icon={faPhone} className="inline text-indigo-600 mr-2" />
+              <strong>Mobile:</strong>{" "}
+              <FontAwesomeIcon icon={faPhone} className="inline text-indigo-600 mr-2" />
               {student.mobile}
             </p>
             <p className="text-lg text-gray-700">
-              <strong>Address:</strong> <FontAwesomeIcon icon={faLocation} className="inline text-indigo-600 mr-2" />
+              <strong>Address:</strong>{" "}
+              <FontAwesomeIcon icon={faLocation} className="inline text-indigo-600 mr-2" />
               {student.address}
             </p>
             <p className="text-lg text-gray-700">
-              <strong>Date of joining:</strong> <FontAwesomeIcon icon={faCalendarAlt} className="inline text-indigo-600 mr-2" />
+              <strong>Date of joining:</strong>{" "}
+              <FontAwesomeIcon icon={faCalendarAlt} className="inline text-indigo-600 mr-2" />
               {student.dateOfJoining}
             </p>
           </div>
-
 
           {/* Running shift  */}
           <div className="space-y-4 overflow-x-auto">
@@ -162,7 +225,7 @@ function StudentDetails() {
                       <td className="px-4 whitespace-nowrap py-2">{index + 1}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.shifts.join(" , ")}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.payment.amount}</td>
-                      <td className="px-4 whitespace-nowrap py-2">{each.payment.dues? each.payment.dues :0 }</td>
+                      <td className="px-4 whitespace-nowrap py-2">{each.payment.dues ? each.payment.dues : 0}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.payment.dateOfPayment}</td>
                       <td className="px-4 whitespace-nowrap py-2">{each.payment.eligibleTill}</td>
                     </tr>
